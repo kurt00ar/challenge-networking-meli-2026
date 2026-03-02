@@ -153,7 +153,7 @@ Si este entorno creciera a múltiples dispositivos por sede:
 └── scripts/               # Scripts auxiliares
 
 ```
-⸻
+---
 
 🚀 Inicio Rápido (Modo Evaluador)
 
@@ -181,7 +181,7 @@ docker compose ps
 make part2-run-all
 
 
-⸻
+---
 
 🔵 Parte 1 — Automatización L2 (VLANs + Hostname)
 
@@ -205,7 +205,7 @@ Outputs:
       •     Evidencia: part1/evidence/flask/
       •     Backups: part1/backups/
 
-⸻
+---
 
 🟢 Parte 2 — VPN IPsec (FortiGate ↔ Palo Alto)
 
@@ -229,7 +229,7 @@ Validaciones implementadas:
       •     Rutas estáticas
       •     Conectividad validada vía playbooks
 
-⸻
+---
 
 ♻️ Reset completo del entorno
 
@@ -239,7 +239,7 @@ docker builder prune -f
 docker compose up -d --build
 
 
-⸻
+---
 
 🎥 Evidencia adicional (video)
 
@@ -251,4 +251,4 @@ Se recomienda un video corto (7–10 min) mostrando:
 
 Si se requiere acceso al laboratorio para validación técnica, puedo generar accesos VPN temporales bajo solicitud.
 
-⸻
+---
