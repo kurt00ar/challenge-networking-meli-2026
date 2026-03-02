@@ -1,0 +1,8 @@
+Challenge Networking MELI 2026 - Part2
+Stage: VALIDATION (Bonus)
+Timestamp: 20260301_201229
+
+Notes:
+- Palo Alto ops via API key (PAN_HOST/PAN_API_KEY env)
+- FortiGate monitor facts via fortinet.fortios
+- Cross-pings to prove dataplane traffic

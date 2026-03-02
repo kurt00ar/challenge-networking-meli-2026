@@ -1,0 +1,151 @@
+---
+- name: "Part2 | Paso 5 - Debug VPN | Prepare evidence folder"
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    project_root: "{{ playbook_dir }}/.."
+    evidence_root: "{{ project_root }}/evidence"
+    ts: "{{ lookup('pipe','date +%Y%m%d_%H%M%S') }}"
+    evidence_dir: "{{ evidence_root }}/DEBUG_{{ ts }}"
+
+  tasks:
+    - name: "DEBUG | Create evidence folder"
+      ansible.builtin.file:
+        path: "{{ evidence_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: "DEBUG | Save vars for other plays"
+      ansible.builtin.set_fact:
+        vpn_debug_ts: "{{ ts }}"
+        vpn_debug_dir: "{{ evidence_dir }}"
+
+    - name: "DEBUG | Banner"
+      ansible.builtin.copy:
+        dest: "{{ evidence_dir }}/MANIFEST_DEBUG.txt"
+        mode: "0644"
+        content: |
+          Challenge Networking MELI 2026 - Part2
+          Stage: DEBUG
+          Timestamp: {{ ts }}
+          Notes:
+          - This playbook collects operational outputs to troubleshoot VPN issues.
+
+- name: "Part2 | Paso 5 - Debug VPN | Palo Alto (deep ops)"
+  hosts: panos
+  gather_facts: false
+  collections:
+    - paloaltonetworks.panos
+
+  vars:
+    pan_host: "{{ lookup('env','PAN_HOST') }}"
+    pan_api_key: "{{ lookup('env','PAN_API_KEY') }}"
+    pan_https_port: "{{ lookup('env','PAN_HTTPS_PORT') | default('443', true) }}"
+    evidence_dir: "{{ hostvars['localhost'].vpn_debug_dir }}"
+
+  tasks:
+    - name: "PAN | Assert API env"
+      ansible.builtin.assert:
+        that:
+          - pan_host | length > 0
+          - pan_api_key | length > 0
+        fail_msg: "Faltan PAN_HOST / PAN_API_KEY."
+
+    - name: "PAN | Collect ops commands"
+      paloaltonetworks.panos.panos_op:
+        ip_address: "{{ pan_host }}"
+        api_key: "{{ pan_api_key }}"
+        cmd: "{{ item }}"
+      loop:
+        - "show system info"
+        - "show vpn ike-sa"
+        - "show vpn ike-sa gateway"
+        - "show vpn ipsec-sa"
+        - "show vpn tunnel"
+        - "show routing route"
+        - "show arp all"
+        - "show interface logical"
+        - "show interface all"
+      register: pan_ops
+      failed_when: false
+
+    - name: "PAN | Save outputs"
+      ansible.builtin.copy:
+        dest: "{{ evidence_dir }}/pan_debug_ops.xml"
+        mode: "0644"
+        content: |
+          {% for r in (pan_ops.results | default([])) %}
+          <!-- CMD: {{ r.item }} -->
+          {{ r.stdout_xml | default('') }}
+
+          {% endfor %}
+
+- name: "Part2 | Paso 5 - Debug VPN | FortiGate (monitor facts + best effort endpoints)"
+  hosts: fgt
+  gather_facts: false
+  collections:
+    - fortinet.fortios
+
+  vars:
+    vdom: "root"
+    evidence_dir: "{{ hostvars['localhost'].vpn_debug_dir }}"
+
+    fgt_host: "{{ lookup('env','FGT_HOST') }}"
+    fgt_user: "{{ lookup('env','FGT_USER') | default('admin', true) }}"
+    fgt_pass: "{{ lookup('env','FGT_PASS') | default('admin', true) }}"
+    fgt_use_ssl: "{{ (lookup('env','FGT_USE_SSL') | default('false', true)) | lower }}"
+    fgt_http_port: "{{ lookup('env','FGT_HTTP_PORT') | default('80', true) }}"
+    fgt_https_port: "{{ lookup('env','FGT_HTTPS_PORT') | default('443', true) }}"
+    fgt_scheme: "{{ 'https' if fgt_use_ssl in ['true','1','yes'] else 'http' }}"
+    fgt_port: "{{ fgt_https_port if fgt_scheme == 'https' else fgt_http_port }}"
+    fgt_base: "{{ fgt_scheme }}://{{ fgt_host }}:{{ fgt_port }}"
+
+  tasks:
+    - name: "FGT | system_status"
+      fortinet.fortios.fortios_monitor_fact:
+        vdom: "{{ vdom }}"
+        selector: "system_status"
+      register: fgt_status
+
+    - name: "FGT | vpn_ipsec monitor"
+      fortinet.fortios.fortios_monitor_fact:
+        vdom: "{{ vdom }}"
+        selector: "vpn_ipsec"
+      register: fgt_vpn
+
+    - name: "FGT | router routing-table (best-effort endpoint)"
+      ansible.builtin.uri:
+        url: "{{ fgt_base }}/api/v2/monitor/router/ipv4?format=all"
+        method: GET
+        url_username: "{{ fgt_user }}"
+        url_password: "{{ fgt_pass }}"
+        force_basic_auth: true
+        validate_certs: false
+        return_content: true
+        status_code: [200, 400, 401, 403, 404, 500]
+      register: fgt_routes_try
+      failed_when: false
+
+    - name: "FGT | Save evidence files"
+      ansible.builtin.copy:
+        dest: "{{ evidence_dir }}/{{ item.name }}"
+        mode: "0644"
+        content: "{{ item.content }}"
+      loop:
+        - { name: "fgt_system_status.json", content: "{{ fgt_status.meta | default({}) | to_nice_json }}" }
+        - { name: "fgt_vpn_ipsec.json", content: "{{ fgt_vpn.meta | default({}) | to_nice_json }}" }
+        - { name: "fgt_routes_raw.txt", content: "{{ fgt_routes_try.content | default('') }}" }
+        - { name: "fgt_routes_status.json", content: "{{ {'http_status': (fgt_routes_try.status|default(0)), 'bytes': (fgt_routes_try.content|default('')|length)} | to_nice_json }}" }
+
+- name: "Part2 | Paso 5 - Debug VPN | Summary"
+  hosts: localhost
+  gather_facts: false
+  vars:
+    evidence_dir: "{{ hostvars['localhost'].vpn_debug_dir }}"
+  tasks:
+    - name: "DEBUG | Print location"
+      ansible.builtin.debug:
+        msg:
+          - "Debug collection done."
+          - "Evidence saved at: {{ evidence_dir }}"

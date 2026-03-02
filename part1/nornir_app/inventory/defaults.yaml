@@ -1,0 +1,13 @@
+username: admin
+password: admin
+
+connection_options:
+  netmiko:
+    extras:
+      device_type: cisco_ios
+      fast_cli: false
+      timeout: 30
+      conn_timeout: 15
+      auth_timeout: 15
+      banner_timeout: 30
+      global_delay_factor: 2

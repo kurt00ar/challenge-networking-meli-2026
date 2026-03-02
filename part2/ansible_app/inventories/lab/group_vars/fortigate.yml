@@ -1,0 +1,46 @@
+# part2/ansible_app/inventories/lab/group_vars/fortigate.yml
+# -----------------------------------------------------------------------------
+# FortiGate - Group Vars (Lab)
+# -----------------------------------------------------------------------------
+
+# Naming
+fgt_phase1_name: "{{ vpn_name }}_P1"
+fgt_phase2_name: "{{ vpn_name }}_P2"
+fgt_tunnel_if: "{{ vpn_fgt_tunnel_if | default(vpn_name) }}"
+
+# WAN interface used for IKE (must exist on FortiGate)
+fgt_wan_interface: "{{ vpn_fgt_wan_if }}"
+
+# Zones (WAN/LAN exist, VPN will be created)
+fgt_zone_wan: "{{ vpn_zone_wan }}"
+fgt_zone_lan: "{{ vpn_zone_lan }}"
+fgt_zone_vpn: "{{ vpn_zone_vpn }}"
+
+# Phase1
+fgt_ike_version: "{{ 2 if vpn_ike_version == 'ikev2' else 1 }}"
+fgt_phase1_proposals:
+  - "{{ vpn_p1_proposal }}"
+fgt_dh_groups:
+  - "{{ vpn_p1_dh_group | int }}"
+fgt_phase1_lifetime: "{{ vpn_p1_lifetime | int }}"
+
+# DPD (FortiGate-specific knobs)
+fgt_dpd: "on-idle"
+fgt_dpd_retryinterval: "{{ vpn_dpd_interval | int }}"
+fgt_dpd_retrycount: "{{ vpn_dpd_retry | int }}"
+
+# Phase2
+fgt_phase2_proposals:
+  - "{{ vpn_p2_proposal }}"
+fgt_pfs: "enable"
+fgt_pfs_dh_groups:
+  - "{{ vpn_p2_pfs_group | int }}"
+fgt_phase2_lifetime: "{{ vpn_p2_lifetime | int }}"
+
+# Tunnel IP (FortiGate MUST be /32)
+fgt_tunnel_ip: "{{ vpn_tunnel_fgt_ip }}"
+fgt_tunnel_mask: "{{ vpn_fgt_tunnel_ip_mask }}"
+
+# Proxy-IDs / selectors (FortiGate perspective)
+fgt_proxyid_local_subnets: "{{ vpn_fgt_inside_subnets | default([]) }}"
+fgt_proxyid_remote_subnets: "{{ vpn_pan_inside_subnets | default([]) }}"

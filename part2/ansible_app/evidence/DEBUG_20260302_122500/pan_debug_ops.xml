@@ -1,0 +1,449 @@
+<!-- CMD: show system info -->
+<response status="success"><result><system><hostname>FW-PA-BR</hostname><ip-address>192.168.1.245</ip-address><public-ip-address>unknown</public-ip-address><netmask>255.255.255.0</netmask><default-gateway>192.168.1.254</default-gateway><is-dhcp>no</is-dhcp><ipv6-address>unknown</ipv6-address><ipv6-link-local-address>fe80::e7b:caff:feb0:0/64</ipv6-link-local-address><mac-address>0c:7b:ca:b0:00:00</mac-address><time>Mon Mar  2 09:26:12 2026
+</time>
+<uptime>0 days, 13:44:55</uptime>
+<devicename>FW-PA-BR</devicename>
+<family>vm</family><model>PA-VM</model><serial>unknown</serial><vm-mac-base>BA:DB:EE:FB:AD:00</vm-mac-base><vm-mac-count>255</vm-mac-count><vm-uuid>FF7BCAB0-62A0-4AAE-84A2-B864BC7FD54F</vm-uuid><vm-cpuid>KVM:63060000FDFB8B07</vm-cpuid><vm-license>none</vm-license><vm-cap-tier>unknown</vm-cap-tier><vm-cores>2</vm-cores><vm-mem>4031300</vm-mem><relicense>0</relicense><vm-mode>KVM</vm-mode>
+<cloud-mode>non-cloud</cloud-mode>
+<sw-version>10.1.0</sw-version>
+<global-protect-client-package-version>0.0.0</global-protect-client-package-version>
+<device-dictionary-version>1-211</device-dictionary-version>
+<app-version>8402-6681</app-version>
+<av-version>0</av-version>
+<threat-version>8402-6681</threat-version>
+<wf-private-version>0</wf-private-version>
+<wf-private-release-date>unknown</wf-private-release-date>
+<url-db>paloaltonetworks</url-db>
+<wildfire-version>0</wildfire-version>
+<wildfire-rt>Disabled</wildfire-rt>
+<url-filtering-version>0000.00.00.000</url-filtering-version>
+<global-protect-datafile-version>unknown</global-protect-datafile-version>
+<global-protect-datafile-release-date>unknown</global-protect-datafile-release-date><global-protect-clientless-vpn-version>0</global-protect-clientless-vpn-version>
+<logdb-version>10.1.2</logdb-version>
+<plugin_versions><entry name="vm_series" version="2.1.0"><pkginfo>vm_series-2.1.0</pkginfo></entry><entry name="dlp" version="1.0.3"><pkginfo>dlp-1.0.3</pkginfo></entry></plugin_versions><platform-family>vm</platform-family>
+<vpn-disable-mode>off</vpn-disable-mode>
+<multi-vsys>off</multi-vsys>
+<operational-mode>normal</operational-mode>
+<device-certificate-status>None</device-certificate-status></system></result></response>
+
+<!-- CMD: show vpn ike-sa -->
+<response status="success"><result>
+  <entry>
+    <name>VPN_MELI_CHALLENGE-IKEGW</name>
+    <created>Mar.02 09:26:01</created>
+    <expires>Mar.02 17:26:01</expires>
+    <gwid>1</gwid>
+    <role>Resp</role>
+    <mode>IKEv2</mode>
+    <algo>PSK/ DH2/ DES/SHA256</algo>
+  </entry>
+</result></response>
+
+<!-- CMD: show vpn ike-sa gateway -->
+
+
+<!-- CMD: show vpn ipsec-sa -->
+<response status="success"><result>
+  <ntun>1</ntun>
+  <entries>
+    <entry>
+      <kb>Unlimited</kb>
+      <life>3600</life>
+      <enc>DES</enc>
+      <remote>201.254.16.2          </remote>
+      <name>VPN_MELI_CHALLENGE-IPSEC:px01</name>
+      <proto>ESP</proto>
+      <i_spi>3024275767</i_spi>
+      <gwid>1</gwid>
+      <o_spi>3598266050</o_spi>
+      <remain>3585</remain>
+      <tid>1</tid>
+      <hash>SHA256</hash>
+      <gateway>VPN_MELI_CHALLENGE-IKEGW</gateway>
+    </entry>
+  </entries>
+</result></response>
+
+<!-- CMD: show vpn tunnel -->
+<response status="success"><result>
+  <ntun>1</ntun>
+  <entries>
+    <entry>
+      <gw>VPN_MELI_CHALLENGE-IKEGW</gw>
+      <kb>0</kb>
+      <life>3600</life>
+      <TSr_port>0</TSr_port>
+      <hash>SHA256</hash>
+      <TSi_prefix>24</TSi_prefix>
+      <TSi_ip>10.20.10.0</TSi_ip>
+      <proto>ESP</proto>
+      <TSr_proto>0</TSr_proto>
+      <enc>DES</enc>
+      <TSr_prefix>24</TSr_prefix>
+      <mode>tunl</mode>
+      <TSi_port>0</TSi_port>
+      <TSr_ip>10.10.10.0</TSr_ip>
+      <dh>DH2</dh>
+      <id>1</id>
+      <TSi_proto>0</TSi_proto>
+      <name>VPN_MELI_CHALLENGE-IPSEC:px01</name>
+    </entry>
+  </entries>
+</result></response>
+
+<!-- CMD: show routing route -->
+<response status="success"><result>
+	<flags>flags: A:active, ?:loose, C:connect, H:host, S:static, ~:internal, R:rip, O:ospf, B:bgp, Oi:ospf intra-area, Oo:ospf inter-area, O1:ospf ext-type-1, O2:ospf ext-type-2, E:ecmp, M:multicast</flags>
+	<entry>
+		<virtual-router>default</virtual-router>
+		<destination>0.0.0.0/0</destination>
+		<nexthop>200.169.116.1</nexthop>
+		<metric>10</metric>
+		<flags>A S   </flags>
+		<age />
+		<interface>ethernet1/3</interface>
+		<route-table>unicast</route-table></entry>
+	<entry>
+		<virtual-router>default</virtual-router>
+		<destination>10.20.10.0/24</destination>
+		<nexthop>10.20.10.1</nexthop>
+		<metric>0</metric>
+		<flags>A C   </flags>
+		<age />
+		<interface>ethernet1/1.10</interface>
+		<route-table>unicast</route-table></entry>
+	<entry>
+		<virtual-router>default</virtual-router>
+		<destination>10.20.10.1/32</destination>
+		<nexthop>0.0.0.0</nexthop>
+		<metric>0</metric>
+		<flags>A H   </flags>
+		<age />
+		<interface />
+		<route-table>unicast</route-table></entry>
+	<entry>
+		<virtual-router>default</virtual-router>
+		<destination>10.20.20.0/24</destination>
+		<nexthop>10.20.20.1</nexthop>
+		<metric>0</metric>
+		<flags>A C   </flags>
+		<age />
+		<interface>ethernet1/1.20</interface>
+		<route-table>unicast</route-table></entry>
+	<entry>
+		<virtual-router>default</virtual-router>
+		<destination>10.20.20.1/32</destination>
+		<nexthop>0.0.0.0</nexthop>
+		<metric>0</metric>
+		<flags>A H   </flags>
+		<age />
+		<interface />
+		<route-table>unicast</route-table></entry>
+	<entry>
+		<virtual-router>default</virtual-router>
+		<destination>10.20.50.0/24</destination>
+		<nexthop>10.20.50.1</nexthop>
+		<metric>0</metric>
+		<flags>A C   </flags>
+		<age />
+		<interface>ethernet1/1.50</interface>
+		<route-table>unicast</route-table></entry>
+	<entry>
+		<virtual-router>default</virtual-router>
+		<destination>10.20.50.1/32</destination>
+		<nexthop>0.0.0.0</nexthop>
+		<metric>0</metric>
+		<flags>A H   </flags>
+		<age />
+		<interface />
+		<route-table>unicast</route-table></entry>
+	<entry>
+		<virtual-router>default</virtual-router>
+		<destination>169.255.1.0/30</destination>
+		<nexthop>169.255.1.2</nexthop>
+		<metric>0</metric>
+		<flags>A C   </flags>
+		<age />
+		<interface>tunnel.10</interface>
+		<route-table>unicast</route-table></entry>
+	<entry>
+		<virtual-router>default</virtual-router>
+		<destination>169.255.1.2/32</destination>
+		<nexthop>0.0.0.0</nexthop>
+		<metric>0</metric>
+		<flags>A H   </flags>
+		<age />
+		<interface />
+		<route-table>unicast</route-table></entry>
+	<entry>
+		<virtual-router>default</virtual-router>
+		<destination>200.169.116.0/30</destination>
+		<nexthop>200.169.116.2</nexthop>
+		<metric>0</metric>
+		<flags>A C   </flags>
+		<age />
+		<interface>ethernet1/3</interface>
+		<route-table>unicast</route-table></entry>
+	<entry>
+		<virtual-router>default</virtual-router>
+		<destination>200.169.116.2/32</destination>
+		<nexthop>0.0.0.0</nexthop>
+		<metric>0</metric>
+		<flags>A H   </flags>
+		<age />
+		<interface />
+		<route-table>unicast</route-table></entry></result></response>
+
+<!-- CMD: show arp all -->
+
+
+<!-- CMD: show interface logical -->
+<response status="success"><result>
+  <ifnet>
+    <entry>
+      <name>ethernet1/1</name>
+      <zone>LAN</zone>
+      <fwd>N/A</fwd>
+      <vsys>1</vsys>
+      <dyn-addr />
+      <addr6 />
+      <tag>0</tag>
+      <ip>N/A</ip>
+      <id>16</id>
+      <addr />
+    </entry>
+    <entry>
+      <name>ethernet1/1.10</name>
+      <zone>LAN</zone>
+      <fwd>vr:default</fwd>
+      <vsys>1</vsys>
+      <dyn-addr />
+      <addr6 />
+      <tag>10</tag>
+      <ip>10.20.10.1/24</ip>
+      <id>256</id>
+      <addr />
+    </entry>
+    <entry>
+      <name>ethernet1/1.20</name>
+      <zone>LAN</zone>
+      <fwd>vr:default</fwd>
+      <vsys>1</vsys>
+      <dyn-addr />
+      <addr6 />
+      <tag>20</tag>
+      <ip>10.20.20.1/24</ip>
+      <id>257</id>
+      <addr />
+    </entry>
+    <entry>
+      <name>ethernet1/1.50</name>
+      <zone>LAN</zone>
+      <fwd>vr:default</fwd>
+      <vsys>1</vsys>
+      <dyn-addr />
+      <addr6 />
+      <tag>50</tag>
+      <ip>10.20.50.1/24</ip>
+      <id>258</id>
+      <addr />
+    </entry>
+    <entry>
+      <name>ethernet1/3</name>
+      <zone>WAN</zone>
+      <fwd>vr:default</fwd>
+      <vsys>1</vsys>
+      <dyn-addr />
+      <addr6 />
+      <tag>0</tag>
+      <ip>200.169.116.2/30</ip>
+      <id>18</id>
+      <addr />
+    </entry>
+    <entry>
+      <name>vlan</name>
+      <zone />
+      <fwd>N/A</fwd>
+      <vsys>1</vsys>
+      <dyn-addr />
+      <addr6 />
+      <tag>0</tag>
+      <ip>N/A</ip>
+      <id>1</id>
+      <addr />
+    </entry>
+    <entry>
+      <name>tunnel</name>
+      <zone />
+      <fwd>N/A</fwd>
+      <vsys>1</vsys>
+      <dyn-addr />
+      <addr6 />
+      <tag>0</tag>
+      <ip>N/A</ip>
+      <id>4</id>
+      <addr />
+    </entry>
+    <entry>
+      <name>tunnel.10</name>
+      <zone>VPN</zone>
+      <fwd>vr:default</fwd>
+      <vsys>1</vsys>
+      <dyn-addr />
+      <addr6 />
+      <tag>0</tag>
+      <ip>169.255.1.2/30</ip>
+      <id>259</id>
+      <addr />
+    </entry>
+  </ifnet>
+</result></response>
+
+<!-- CMD: show interface all -->
+<response status="success"><result>
+  <ifnet>
+    <entry>
+      <name>ethernet1/1</name>
+      <zone>LAN</zone>
+      <fwd>N/A</fwd>
+      <vsys>1</vsys>
+      <dyn-addr />
+      <addr6 />
+      <tag>0</tag>
+      <ip>N/A</ip>
+      <id>16</id>
+      <addr />
+    </entry>
+    <entry>
+      <name>ethernet1/1.10</name>
+      <zone>LAN</zone>
+      <fwd>vr:default</fwd>
+      <vsys>1</vsys>
+      <dyn-addr />
+      <addr6 />
+      <tag>10</tag>
+      <ip>10.20.10.1/24</ip>
+      <id>256</id>
+      <addr />
+    </entry>
+    <entry>
+      <name>ethernet1/1.20</name>
+      <zone>LAN</zone>
+      <fwd>vr:default</fwd>
+      <vsys>1</vsys>
+      <dyn-addr />
+      <addr6 />
+      <tag>20</tag>
+      <ip>10.20.20.1/24</ip>
+      <id>257</id>
+      <addr />
+    </entry>
+    <entry>
+      <name>ethernet1/1.50</name>
+      <zone>LAN</zone>
+      <fwd>vr:default</fwd>
+      <vsys>1</vsys>
+      <dyn-addr />
+      <addr6 />
+      <tag>50</tag>
+      <ip>10.20.50.1/24</ip>
+      <id>258</id>
+      <addr />
+    </entry>
+    <entry>
+      <name>ethernet1/3</name>
+      <zone>WAN</zone>
+      <fwd>vr:default</fwd>
+      <vsys>1</vsys>
+      <dyn-addr />
+      <addr6 />
+      <tag>0</tag>
+      <ip>200.169.116.2/30</ip>
+      <id>18</id>
+      <addr />
+    </entry>
+    <entry>
+      <name>vlan</name>
+      <zone />
+      <fwd>N/A</fwd>
+      <vsys>1</vsys>
+      <dyn-addr />
+      <addr6 />
+      <tag>0</tag>
+      <ip>N/A</ip>
+      <id>1</id>
+      <addr />
+    </entry>
+    <entry>
+      <name>tunnel</name>
+      <zone />
+      <fwd>N/A</fwd>
+      <vsys>1</vsys>
+      <dyn-addr />
+      <addr6 />
+      <tag>0</tag>
+      <ip>N/A</ip>
+      <id>4</id>
+      <addr />
+    </entry>
+    <entry>
+      <name>tunnel.10</name>
+      <zone>VPN</zone>
+      <fwd>vr:default</fwd>
+      <vsys>1</vsys>
+      <dyn-addr />
+      <addr6 />
+      <tag>0</tag>
+      <ip>169.255.1.2/30</ip>
+      <id>259</id>
+      <addr />
+    </entry>
+  </ifnet>
+  <hw>
+    <entry>
+      <name>ethernet1/1</name>
+      <duplex>full</duplex>
+      <type>0</type>
+      <state>up</state>
+      <st>10000/full/up</st>
+      <mac>0c:7b:ca:b0:00:01</mac>
+      <mode>(autoneg)</mode>
+      <speed>10000</speed>
+      <id>16</id>
+    </entry>
+    <entry>
+      <name>ethernet1/3</name>
+      <duplex>full</duplex>
+      <type>0</type>
+      <state>up</state>
+      <st>10000/full/up</st>
+      <mac>0c:7b:ca:b0:00:03</mac>
+      <mode>(autoneg)</mode>
+      <speed>10000</speed>
+      <id>18</id>
+    </entry>
+    <entry>
+      <name>vlan</name>
+      <duplex>[n/a]</duplex>
+      <type>3</type>
+      <state>up</state>
+      <st>[n/a]/[n/a]/up</st>
+      <mac>ba:db:ee:fb:ad:01</mac>
+      <mode>(unknown)</mode>
+      <speed>[n/a]</speed>
+      <id>1</id>
+    </entry>
+    <entry>
+      <name>tunnel</name>
+      <duplex>[n/a]</duplex>
+      <type>6</type>
+      <state>up</state>
+      <st>[n/a]/[n/a]/up</st>
+      <mac>ba:db:ee:fb:ad:04</mac>
+      <mode>(unknown)</mode>
+      <speed>[n/a]</speed>
+      <id>4</id>
+    </entry>
+  </hw>
+</result></response>
+

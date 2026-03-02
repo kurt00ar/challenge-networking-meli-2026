@@ -1,0 +1,5 @@
+<!-- LAN->VPN -->
+<response status="success" code="20"><msg>command succeeded</msg></response>
+
+<!-- VPN->LAN -->
+<response status="success" code="20"><msg>command succeeded</msg></response>

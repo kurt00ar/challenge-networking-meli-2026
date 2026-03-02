@@ -1,0 +1,137 @@
+---
+# -----------------------------------------------------------------------------
+# Part2 | Paso 00 - PRE Backup (PRO)
+# - Timestamp único (ts) generado 1 sola vez (source of truth)
+# - Define bases ABSOLUTAS dentro del contenedor:
+#       /app/part2/evidence
+#       /app/part2/backups
+# - Palo Alto backup via XML API (localhost)
+# - FortiGate evidence via fortios httpapi (host: fgt)
+# -----------------------------------------------------------------------------
+
+- name: "Part2 | Paso 00 - PRE | Local prep + Palo Alto backup"
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    # Bases SIEMPRE absolutas dentro del contenedor
+    backups_base_default: "/app/part2/backups"
+    evidence_base_default: "/app/part2/evidence"
+
+    pan_host: "{{ lookup('env','PAN_HOST') | default('', true) }}"
+    pan_api_key: "{{ lookup('env','PAN_API_KEY') | default('', true) }}"
+    pan_https_port: "{{ lookup('env','PAN_HTTPS_PORT') | default('443', true) }}"
+
+    fgt_host: "{{ lookup('env','FGT_HOST') | default('', true) }}"  # solo para assert inicial
+
+  tasks:
+    - name: "PRE | Assert required env vars (PAN_HOST/PAN_API_KEY/FGT_HOST)"
+      ansible.builtin.assert:
+        that:
+          - pan_host | length > 0
+          - pan_api_key | length > 0
+          - fgt_host | length > 0
+        fail_msg: |
+          Faltan variables de entorno.
+          Requeridas:
+            PAN_HOST
+            PAN_API_KEY
+            FGT_HOST
+
+    - name: "PRE | Generate single timestamp (one source of truth)"
+      ansible.builtin.set_fact:
+        ts: "{{ lookup('pipe','date +%Y%m%d_%H%M%S') }}"
+
+    - name: "PRE | Set global bases (facts) for other playbooks"
+      ansible.builtin.set_fact:
+        evidence_base: "{{ evidence_base_default }}"
+        backups_base: "{{ backups_base_default }}"
+
+    - name: "PRE | Define backup/evidence paths using ts"
+      ansible.builtin.set_fact:
+        pan_backup_dir: "{{ backups_base }}/paloalto/{{ ts }}"
+        fgt_backup_dir: "{{ backups_base }}/fortigate/{{ ts }}"
+        pre_evidence_dir: "{{ evidence_base }}/{{ ts }}/pre"
+
+    - name: "PRE | Create folders (backups + evidence)"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - "{{ pan_backup_dir }}"
+        - "{{ fgt_backup_dir }}"
+        - "{{ pre_evidence_dir }}"
+
+    - name: "PRE | Banner"
+      ansible.builtin.debug:
+        msg:
+          - "TS: {{ ts }}"
+          - "EVIDENCE_BASE: {{ evidence_base }}"
+          - "BACKUPS_BASE: {{ backups_base }}"
+          - "PAN backup dir: {{ pan_backup_dir }}"
+          - "FGT backup dir: {{ fgt_backup_dir }}"
+          - "PRE evidence dir: {{ pre_evidence_dir }}"
+
+    # -------------------- Palo Alto backup --------------------
+    - name: "PRE | PAN | Download running-config.xml (full /config)"
+      ansible.builtin.uri:
+        url: "https://{{ pan_host }}:{{ pan_https_port }}/api/?type=export&category=configuration&key={{ pan_api_key }}"
+        method: GET
+        validate_certs: false
+        return_content: true
+      register: pan_running_cfg
+
+    - name: "PRE | PAN | Save running-config.xml"
+      ansible.builtin.copy:
+        dest: "{{ pan_backup_dir }}/running-config.xml"
+        content: "{{ pan_running_cfg.content }}"
+        mode: "0644"
+
+    - name: "PRE | PAN | show system info (evidence)"
+      ansible.builtin.uri:
+        url: "https://{{ pan_host }}:{{ pan_https_port }}/api/?type=op&cmd={{ '<show><system><info></info></system></show>' | urlencode }}&key={{ pan_api_key }}"
+        method: GET
+        validate_certs: false
+        return_content: true
+      register: pan_sysinfo
+
+    - name: "PRE | PAN | Save system info (xml)"
+      ansible.builtin.copy:
+        dest: "{{ pre_evidence_dir }}/pan_show_system_info.xml"
+        content: "{{ pan_sysinfo.content }}"
+        mode: "0644"
+
+# -----------------------------------------------------------------------------
+# FortiGate evidence (se ejecuta en host real "fgt")
+# -----------------------------------------------------------------------------
+- name: "Part2 | Paso 00 - PRE | FortiGate evidence + backup"
+  hosts: fgt
+  gather_facts: false
+
+  tasks:
+    - name: "PRE | FGT | system_status (evidence)"
+      fortinet.fortios.fortios_monitor_fact:
+        vdom: "root"
+        selector: "system_status"
+      register: fgt_status
+
+    - name: "PRE | FGT | Save system_status (json)"
+      ansible.builtin.copy:
+        dest: "{{ hostvars['localhost'].pre_evidence_dir }}/fgt_system_status.json"
+        content: "{{ fgt_status | to_nice_json }}"
+        mode: "0644"
+
+    - name: "PRE | FGT | vpn_ipsec monitor (evidence)"
+      fortinet.fortios.fortios_monitor_fact:
+        vdom: "root"
+        selector: "vpn_ipsec"
+      register: fgt_vpn
+      failed_when: false
+
+    - name: "PRE | FGT | Save vpn_ipsec (json)"
+      ansible.builtin.copy:
+        dest: "{{ hostvars['localhost'].pre_evidence_dir }}/fgt_vpn_ipsec.json"
+        content: "{{ fgt_vpn | to_nice_json }}"
+        mode: "0644"
+      when: fgt_vpn is defined

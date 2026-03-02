@@ -1,0 +1,5 @@
+Challenge Networking MELI 2026 - Part2
+Stage: DEBUG
+Timestamp: 20260302_122500
+Notes:
+- This playbook collects operational outputs to troubleshoot VPN issues.

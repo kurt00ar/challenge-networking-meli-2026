@@ -1,0 +1,43 @@
+{
+  "ok": false,
+  "error": null,
+  "inputs": {
+    "switch1_hostname": "SW-DC1-AR",
+    "switch2_hostname": "SW-DC1-BR",
+    "vlans": [
+      {
+        "id": 10,
+        "name": "VLAN_DATOS"
+      },
+      {
+        "id": 20,
+        "name": "VLAN_VOZ"
+      },
+      {
+        "id": 50,
+        "name": "VLAN_SEGURIDAD"
+      }
+    ]
+  },
+  "devices": {
+    "SW-DC1-AR": {
+      "steps": [
+        {
+          "set_hostname": "Subtask: netmiko_send_config (failed)\n"
+        }
+      ],
+      "ok": false,
+      "error": "NornirSubTaskError()"
+    },
+    "SW-DC1-BR": {
+      "steps": [
+        {
+          "set_hostname": "Subtask: netmiko_send_config (failed)\n"
+        }
+      ],
+      "ok": false,
+      "error": "NornirSubTaskError()"
+    }
+  },
+  "evidence_file": null
+}

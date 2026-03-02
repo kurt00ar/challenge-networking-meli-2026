@@ -1,0 +1,28 @@
+# -----------------------------
+# Part1 - Nornir stack
+# -----------------------------
+nornir==3.3.0
+nornir_netmiko
+nornir_napalm
+nornir_utils
+nornir_jinja2
+napalm
+netmiko
+pyyaml
+rich
+
+# -----------------------------
+# Shared - Ansible + libs
+# -----------------------------
+ansible-core==2.17.14
+requests
+jmespath
+
+# PAN-OS python SDK (required by paloaltonetworks.panos modules)
+pan-os-python==1.12.1
+xmltodict==0.13.0
+
+# -----------------------------
+# Web UI
+# -----------------------------
+flask

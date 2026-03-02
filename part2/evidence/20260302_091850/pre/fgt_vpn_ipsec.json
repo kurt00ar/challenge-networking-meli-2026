@@ -1,0 +1,17 @@
+{
+    "changed": false,
+    "failed": false,
+    "failed_when_result": false,
+    "meta": {
+        "action": "",
+        "build": 632,
+        "http_method": "GET",
+        "name": "ipsec",
+        "path": "vpn",
+        "results": [],
+        "serial": "FFVMEVM3XNGHLRF0",
+        "status": "success",
+        "vdom": "root",
+        "version": "v7.0.15"
+    }
+}

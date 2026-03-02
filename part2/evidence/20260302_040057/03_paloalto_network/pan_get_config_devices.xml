@@ -1,0 +1,702 @@
+<response status="success" code="19"><result total-count="1" count="1">
+  <devices admin="admin" dirtyId="6" time="2026/03/02 01:01:10">
+    <entry name="localhost.localdomain" admin="admin" dirtyId="6" time="2026/03/02 01:01:10">
+      <network admin="admin" dirtyId="6" time="2026/03/02 01:01:10">
+        <interface admin="admin" dirtyId="6" time="2026/03/02 01:01:08">
+          <ethernet>
+            <entry name="ethernet1/3">
+              <layer3>
+                <ndp-proxy>
+                  <enabled>no</enabled>
+                </ndp-proxy>
+                <sdwan-link-settings>
+                  <upstream-nat>
+                    <enable>no</enable>
+                    <static-ip/>
+                  </upstream-nat>
+                  <enable>no</enable>
+                </sdwan-link-settings>
+                <ip>
+                  <entry name="200.169.116.2/30"/>
+                </ip>
+                <lldp>
+                  <enable>no</enable>
+                </lldp>
+                <interface-management-profile>Allow-Ping</interface-management-profile>
+              </layer3>
+              <comment>WAN CLARO</comment>
+            </entry>
+            <entry name="ethernet1/1">
+              <layer3>
+                <ndp-proxy>
+                  <enabled>no</enabled>
+                </ndp-proxy>
+                <sdwan-link-settings>
+                  <upstream-nat>
+                    <enable>no</enable>
+                    <static-ip/>
+                  </upstream-nat>
+                  <enable>no</enable>
+                </sdwan-link-settings>
+                <lldp>
+                  <enable>no</enable>
+                </lldp>
+                <units>
+                  <entry name="ethernet1/1.10">
+                    <ipv6>
+                      <neighbor-discovery>
+                        <router-advertisement>
+                          <enable>no</enable>
+                        </router-advertisement>
+                      </neighbor-discovery>
+                    </ipv6>
+                    <ndp-proxy>
+                      <enabled>no</enabled>
+                    </ndp-proxy>
+                    <sdwan-link-settings>
+                      <enable>no</enable>
+                    </sdwan-link-settings>
+                    <adjust-tcp-mss>
+                      <enable>no</enable>
+                    </adjust-tcp-mss>
+                    <ip>
+                      <entry name="10.20.10.1/24"/>
+                    </ip>
+                    <tag>10</tag>
+                    <comment>VLAN 10 - DATOS</comment>
+                    <interface-management-profile>Allow-Ping</interface-management-profile>
+                  </entry>
+                  <entry name="ethernet1/1.20">
+                    <ipv6>
+                      <neighbor-discovery>
+                        <router-advertisement>
+                          <enable>no</enable>
+                        </router-advertisement>
+                      </neighbor-discovery>
+                    </ipv6>
+                    <ndp-proxy>
+                      <enabled>no</enabled>
+                    </ndp-proxy>
+                    <sdwan-link-settings>
+                      <enable>no</enable>
+                    </sdwan-link-settings>
+                    <adjust-tcp-mss>
+                      <enable>no</enable>
+                    </adjust-tcp-mss>
+                    <ip>
+                      <entry name="10.20.20.1/24"/>
+                    </ip>
+                    <tag>20</tag>
+                    <comment>VLAN 20 - VOZ</comment>
+                  </entry>
+                  <entry name="ethernet1/1.50">
+                    <ipv6>
+                      <neighbor-discovery>
+                        <router-advertisement>
+                          <enable>no</enable>
+                        </router-advertisement>
+                      </neighbor-discovery>
+                    </ipv6>
+                    <ndp-proxy>
+                      <enabled>no</enabled>
+                    </ndp-proxy>
+                    <sdwan-link-settings>
+                      <enable>no</enable>
+                    </sdwan-link-settings>
+                    <adjust-tcp-mss>
+                      <enable>no</enable>
+                    </adjust-tcp-mss>
+                    <ip>
+                      <entry name="10.20.50.1/24"/>
+                    </ip>
+                    <tag>50</tag>
+                    <comment>VLAN 50 - SEGURIDAD</comment>
+                  </entry>
+                </units>
+              </layer3>
+            </entry>
+          </ethernet>
+          <vlan>
+            <units/>
+          </vlan>
+          <tunnel admin="admin" dirtyId="6" time="2026/03/02 01:01:08">
+            <units admin="admin" dirtyId="6" time="2026/03/02 01:01:08">
+              <entry name="tunnel.10" admin="admin" dirtyId="6" time="2026/03/02 01:01:08">
+                <ip admin="admin" dirtyId="6" time="2026/03/02 01:01:08">
+                  <entry name="169.255.1.2/30" admin="admin" dirtyId="6" time="2026/03/02 01:01:08"/>
+                </ip>
+                <interface-management-profile admin="admin" dirtyId="6" time="2026/03/02 01:01:08">Allow-Ping</interface-management-profile>
+              </entry>
+            </units>
+          </tunnel>
+        </interface>
+        <profiles admin="admin" dirtyId="6" time="2026/03/02 01:01:07">
+          <monitor-profile>
+            <entry name="default">
+              <interval>3</interval>
+              <threshold>5</threshold>
+              <action>wait-recover</action>
+            </entry>
+          </monitor-profile>
+          <interface-management-profile admin="admin" dirtyId="6" time="2026/03/02 01:01:07">
+            <entry name="Allow-Ping" admin="admin" dirtyId="6" time="2026/03/02 01:01:07">
+              <ping admin="admin" dirtyId="6" time="2026/03/02 01:01:07">yes</ping>
+            </entry>
+          </interface-management-profile>
+        </profiles>
+        <ike admin="admin" dirtyId="6" time="2026/03/02 01:01:10">
+          <crypto-profiles admin="admin" dirtyId="6" time="2026/03/02 01:01:10">
+            <ike-crypto-profiles admin="admin" dirtyId="6" time="2026/03/02 01:01:10">
+              <entry name="default">
+                <encryption>
+                  <member>aes-128-cbc</member>
+                  <member>3des</member>
+                </encryption>
+                <hash>
+                  <member>sha1</member>
+                </hash>
+                <dh-group>
+                  <member>group2</member>
+                </dh-group>
+                <lifetime>
+                  <hours>8</hours>
+                </lifetime>
+              </entry>
+              <entry name="Suite-B-GCM-128">
+                <encryption>
+                  <member>aes-128-cbc</member>
+                </encryption>
+                <hash>
+                  <member>sha256</member>
+                </hash>
+                <dh-group>
+                  <member>group19</member>
+                </dh-group>
+                <lifetime>
+                  <hours>8</hours>
+                </lifetime>
+              </entry>
+              <entry name="Suite-B-GCM-256">
+                <encryption>
+                  <member>aes-256-cbc</member>
+                </encryption>
+                <hash>
+                  <member>sha384</member>
+                </hash>
+                <dh-group>
+                  <member>group20</member>
+                </dh-group>
+                <lifetime>
+                  <hours>8</hours>
+                </lifetime>
+              </entry>
+              <entry name="VPN_MELI_CHALLENGE_IKE_CRYPTO" admin="admin" dirtyId="6" time="2026/03/02 01:01:10">
+                <encryption admin="admin" dirtyId="6" time="2026/03/02 01:01:10">
+                  <member admin="admin" dirtyId="6" time="2026/03/02 01:01:10">des</member>
+                </encryption>
+                <hash admin="admin" dirtyId="6" time="2026/03/02 01:01:10">
+                  <member admin="admin" dirtyId="6" time="2026/03/02 01:01:10">sha256</member>
+                </hash>
+                <dh-group admin="admin" dirtyId="6" time="2026/03/02 01:01:10">
+                  <member admin="admin" dirtyId="6" time="2026/03/02 01:01:10">group2</member>
+                </dh-group>
+                <lifetime admin="admin" dirtyId="6" time="2026/03/02 01:01:10">
+                  <hours admin="admin" dirtyId="6" time="2026/03/02 01:01:10">8</hours>
+                </lifetime>
+              </entry>
+            </ike-crypto-profiles>
+            <ipsec-crypto-profiles admin="admin" dirtyId="6" time="2026/03/02 01:01:10">
+              <entry name="default">
+                <esp>
+                  <encryption>
+                    <member>aes-128-cbc</member>
+                    <member>3des</member>
+                  </encryption>
+                  <authentication>
+                    <member>sha1</member>
+                  </authentication>
+                </esp>
+                <dh-group>group2</dh-group>
+                <lifetime>
+                  <hours>1</hours>
+                </lifetime>
+              </entry>
+              <entry name="Suite-B-GCM-128">
+                <esp>
+                  <encryption>
+                    <member>aes-128-gcm</member>
+                  </encryption>
+                  <authentication>
+                    <member>none</member>
+                  </authentication>
+                </esp>
+                <dh-group>group19</dh-group>
+                <lifetime>
+                  <hours>1</hours>
+                </lifetime>
+              </entry>
+              <entry name="Suite-B-GCM-256">
+                <esp>
+                  <encryption>
+                    <member>aes-256-gcm</member>
+                  </encryption>
+                  <authentication>
+                    <member>none</member>
+                  </authentication>
+                </esp>
+                <dh-group>group20</dh-group>
+                <lifetime>
+                  <hours>1</hours>
+                </lifetime>
+              </entry>
+              <entry name="VPN_MELI_CHALLENGE_IPSEC_CRYPTO" admin="admin" dirtyId="6" time="2026/03/02 01:01:10">
+                <esp admin="admin" dirtyId="6" time="2026/03/02 01:01:10">
+                  <encryption admin="admin" dirtyId="6" time="2026/03/02 01:01:10">
+                    <member admin="admin" dirtyId="6" time="2026/03/02 01:01:10">des</member>
+                  </encryption>
+                  <authentication admin="admin" dirtyId="6" time="2026/03/02 01:01:10">
+                    <member admin="admin" dirtyId="6" time="2026/03/02 01:01:10">sha256</member>
+                  </authentication>
+                </esp>
+                <dh-group admin="admin" dirtyId="6" time="2026/03/02 01:01:10">group2</dh-group>
+                <lifetime admin="admin" dirtyId="6" time="2026/03/02 01:01:10">
+                  <seconds admin="admin" dirtyId="6" time="2026/03/02 01:01:10">3600</seconds>
+                </lifetime>
+              </entry>
+            </ipsec-crypto-profiles>
+            <global-protect-app-crypto-profiles>
+              <entry name="default">
+                <encryption>
+                  <member>aes-128-cbc</member>
+                </encryption>
+                <authentication>
+                  <member>sha1</member>
+                </authentication>
+              </entry>
+            </global-protect-app-crypto-profiles>
+          </crypto-profiles>
+          <gateway/>
+        </ike>
+        <qos>
+          <profile>
+            <entry name="default">
+              <class-bandwidth-type>
+                <mbps>
+                  <class>
+                    <entry name="class1">
+                      <priority>real-time</priority>
+                    </entry>
+                    <entry name="class2">
+                      <priority>high</priority>
+                    </entry>
+                    <entry name="class3">
+                      <priority>high</priority>
+                    </entry>
+                    <entry name="class4">
+                      <priority>medium</priority>
+                    </entry>
+                    <entry name="class5">
+                      <priority>medium</priority>
+                    </entry>
+                    <entry name="class6">
+                      <priority>low</priority>
+                    </entry>
+                    <entry name="class7">
+                      <priority>low</priority>
+                    </entry>
+                    <entry name="class8">
+                      <priority>low</priority>
+                    </entry>
+                  </class>
+                </mbps>
+              </class-bandwidth-type>
+            </entry>
+          </profile>
+        </qos>
+        <virtual-router admin="admin" dirtyId="6" time="2026/03/02 01:01:09">
+          <entry name="default" admin="admin" dirtyId="6" time="2026/03/02 01:01:09">
+            <interface admin="admin" dirtyId="6" time="2026/03/02 01:01:09">
+              <member>ethernet1/1.10</member>
+              <member>ethernet1/1.20</member>
+              <member>ethernet1/1.50</member>
+              <member>ethernet1/3</member>
+              <member admin="admin" dirtyId="6" time="2026/03/02 01:01:09">tunnel.10</member>
+            </interface>
+            <protocol>
+              <rip>
+                <enable>no</enable>
+              </rip>
+              <bgp>
+                <enable>no</enable>
+                <routing-options>
+                  <graceful-restart>
+                    <enable>yes</enable>
+                  </graceful-restart>
+                </routing-options>
+                <dampening-profile>
+                  <entry name="default">
+                    <cutoff>1.25</cutoff>
+                    <reuse>0.5</reuse>
+                    <max-hold-time>900</max-hold-time>
+                    <decay-half-life-reachable>300</decay-half-life-reachable>
+                    <decay-half-life-unreachable>900</decay-half-life-unreachable>
+                    <enable>yes</enable>
+                  </entry>
+                </dampening-profile>
+              </bgp>
+              <ospf>
+                <enable>no</enable>
+              </ospf>
+              <ospfv3>
+                <enable>no</enable>
+              </ospfv3>
+            </protocol>
+            <routing-table>
+              <ip>
+                <static-route>
+                  <entry name="INTERNET">
+                    <nexthop>
+                      <ip-address>200.169.116.1</ip-address>
+                    </nexthop>
+                    <bfd>
+                      <profile>None</profile>
+                    </bfd>
+                    <path-monitor>
+                      <enable>no</enable>
+                      <failure-condition>any</failure-condition>
+                      <hold-time>2</hold-time>
+                    </path-monitor>
+                    <interface>ethernet1/3</interface>
+                    <metric>10</metric>
+                    <destination>0.0.0.0/0</destination>
+                    <route-table>
+                      <unicast/>
+                    </route-table>
+                  </entry>
+                  <entry name="to_10_10_10_0_24">
+                    <destination>10.10.10.0/24</destination>
+                    <interface>tunnel.10</interface>
+                    <nexthop>
+                      <ip-address>169.255.1.1</ip-address>
+                    </nexthop>
+                    <metric>10</metric>
+                  </entry>
+                </static-route>
+              </ip>
+            </routing-table>
+            <ecmp>
+              <algorithm>
+                <ip-modulo/>
+              </algorithm>
+            </ecmp>
+          </entry>
+        </virtual-router>
+        <vlan/>
+        <tunnel>
+          <ipsec/>
+        </tunnel>
+      </network>
+      <deviceconfig>
+        <system>
+          <type>
+            <static/>
+          </type>
+          <update-server>updates.paloaltonetworks.com</update-server>
+          <update-schedule>
+            <threats>
+              <recurring>
+                <weekly>
+                  <day-of-week>wednesday</day-of-week>
+                  <at>01:02</at>
+                  <action>download-only</action>
+                </weekly>
+              </recurring>
+            </threats>
+          </update-schedule>
+          <timezone>America/Sao_Paulo</timezone>
+          <service>
+            <disable-telnet>yes</disable-telnet>
+            <disable-http>yes</disable-http>
+          </service>
+          <hostname>FW-PA-BR</hostname>
+          <ip-address>192.168.1.245</ip-address>
+          <netmask>255.255.255.0</netmask>
+          <default-gateway>192.168.1.254</default-gateway>
+          <dns-setting>
+            <servers>
+              <primary>8.8.8.8</primary>
+              <secondary>1.1.1.1</secondary>
+            </servers>
+          </dns-setting>
+        </system>
+        <setting>
+          <config>
+            <rematch>yes</rematch>
+          </config>
+          <management>
+            <hostname-type-in-syslog>FQDN</hostname-type-in-syslog>
+          </management>
+          <auto-mac-detect>yes</auto-mac-detect>
+        </setting>
+      </deviceconfig>
+      <vsys admin="admin" dirtyId="6" time="2026/03/02 01:01:09">
+        <entry name="vsys1" admin="admin" dirtyId="6" time="2026/03/02 01:01:09">
+          <application/>
+          <application-group/>
+          <zone admin="admin" dirtyId="6" time="2026/03/02 01:01:09">
+            <entry name="WAN">
+              <network>
+                <layer3>
+                  <member>ethernet1/3</member>
+                </layer3>
+              </network>
+            </entry>
+            <entry name="LAN">
+              <network>
+                <layer3>
+                  <member>ethernet1/1</member>
+                  <member>ethernet1/1.10</member>
+                  <member>ethernet1/1.20</member>
+                  <member>ethernet1/1.50</member>
+                </layer3>
+              </network>
+            </entry>
+            <entry name="VPN" admin="admin" dirtyId="6" time="2026/03/02 01:01:09">
+              <network admin="admin" dirtyId="6" time="2026/03/02 01:01:09">
+                <layer3 admin="admin" dirtyId="6" time="2026/03/02 01:01:09">
+                  <member admin="admin" dirtyId="6" time="2026/03/02 01:01:09">tunnel.10</member>
+                </layer3>
+              </network>
+            </entry>
+          </zone>
+          <service/>
+          <service-group/>
+          <schedule/>
+          <rulebase>
+            <security>
+              <rules>
+                <entry name="ALLOW_LAN_TO_VPN" uuid="3e0e067f-c75a-4597-a231-cf4932c1ce11">
+                  <from>
+                    <member>LAN</member>
+                  </from>
+                  <to>
+                    <member>VPN</member>
+                  </to>
+                  <source>
+                    <member>any</member>
+                  </source>
+                  <destination>
+                    <member>any</member>
+                  </destination>
+                  <application>
+                    <member>any</member>
+                  </application>
+                  <service>
+                    <member>application-default</member>
+                  </service>
+                  <action>allow</action>
+                  <log-start>yes</log-start>
+                  <log-end>yes</log-end>
+                </entry>
+                <entry name="ALLOW_VPN_TO_LAN" uuid="b7b77d26-3086-4744-a9ce-61a43d229d3d">
+                  <from>
+                    <member>VPN</member>
+                  </from>
+                  <to>
+                    <member>LAN</member>
+                  </to>
+                  <source>
+                    <member>any</member>
+                  </source>
+                  <destination>
+                    <member>any</member>
+                  </destination>
+                  <application>
+                    <member>any</member>
+                  </application>
+                  <service>
+                    <member>application-default</member>
+                  </service>
+                  <action>allow</action>
+                  <log-start>yes</log-start>
+                  <log-end>yes</log-end>
+                </entry>
+              </rules>
+            </security>
+          </rulebase>
+          <import admin="admin" dirtyId="6" time="2026/03/02 01:01:08">
+            <network admin="admin" dirtyId="6" time="2026/03/02 01:01:08">
+              <interface admin="admin" dirtyId="6" time="2026/03/02 01:01:08">
+                <member>ethernet1/3</member>
+                <member>ethernet1/1</member>
+                <member>ethernet1/1.10</member>
+                <member>ethernet1/1.20</member>
+                <member>ethernet1/1.50</member>
+                <member admin="admin" dirtyId="6" time="2026/03/02 01:01:08">tunnel.10</member>
+              </interface>
+              <virtual-router>
+                <member>default</member>
+              </virtual-router>
+            </network>
+          </import>
+          <address/>
+        </entry>
+      </vsys>
+      <platform>
+        <limits>
+          <max-edl-ip>50000</max-edl-ip>
+          <max-edl-domain>50000</max-edl-domain>
+          <max-edl-url>50000</max-edl-url>
+          <max-edl-objs>30</max-edl-objs>
+          <max-edl-ip-filesize>6500000</max-edl-ip-filesize>
+          <max-edl-domain-filesize>6500000</max-edl-domain-filesize>
+          <max-edl-url-filesize>6500000</max-edl-url-filesize>
+          <max-address>1250</max-address>
+          <max-address-group>60</max-address-group>
+          <max-address-per-group>1250</max-address-per-group>
+          <max-nat-policy-rule>50</max-nat-policy-rule>
+          <max-oride-policy-rule>50</max-oride-policy-rule>
+          <max-policy-rule>150</max-policy-rule>
+          <max-service>500</max-service>
+          <max-service-per-group>250</max-service-per-group>
+          <max-ssl-policy-rule>50</max-ssl-policy-rule>
+          <max-auth-policy-rule>50</max-auth-policy-rule>
+          <max-pbf-policy-rule>50</max-pbf-policy-rule>
+          <max-qos-policy-rule>50</max-qos-policy-rule>
+          <max-dos-policy-rule>50</max-dos-policy-rule>
+          <max-session>1250</max-session>
+          <max-vlan>1000</max-vlan>
+          <max-vrouter>2</max-vrouter>
+          <max-shared-gateway>0</max-shared-gateway>
+          <max-vsys>2</max-vsys>
+          <base-vsys>1</base-vsys>
+          <licensed-vsys>1</licensed-vsys>
+          <max-vwire>12</max-vwire>
+          <max-zone>10</max-zone>
+          <max-ifnet>50</max-ifnet>
+          <max-ike-peers>1000</max-ike-peers>
+          <max-tunnel>15</max-tunnel>
+          <max-ssl-tunnel>15</max-ssl-tunnel>
+          <max-ssl-portal>6</max-ssl-portal>
+          <max-qosif>4</max-qosif>
+          <max-qosnet>32</max-qosnet>
+          <max-aeqosnet>256</max-aeqosnet>
+          <max-qosbw>10000</max-qosbw>
+          <max-signature>6000</max-signature>
+          <max-threat-signature>6000</max-threat-signature>
+          <max-tsagents>400</max-tsagents>
+          <max-profile>20</max-profile>
+          <max-ha-cluster-members>16</max-ha-cluster-members>
+        </limits>
+        <interfaces>
+          <ethernet>
+            <entry name="ethernet1/1">
+              <duplex>
+                <entry name="auto"/>
+                <entry name="half"/>
+                <entry name="full"/>
+              </duplex>
+              <speed>
+                <entry name="auto"/>
+                <entry name="10"/>
+                <entry name="100"/>
+                <entry name="1000"/>
+              </speed>
+            </entry>
+            <entry name="ethernet1/2">
+              <duplex>
+                <entry name="auto"/>
+                <entry name="half"/>
+                <entry name="full"/>
+              </duplex>
+              <speed>
+                <entry name="auto"/>
+                <entry name="10"/>
+                <entry name="100"/>
+                <entry name="1000"/>
+              </speed>
+            </entry>
+            <entry name="ethernet1/3">
+              <duplex>
+                <entry name="auto"/>
+                <entry name="half"/>
+                <entry name="full"/>
+              </duplex>
+              <speed>
+                <entry name="auto"/>
+                <entry name="10"/>
+                <entry name="100"/>
+                <entry name="1000"/>
+              </speed>
+            </entry>
+            <entry name="ethernet1/4">
+              <duplex>
+                <entry name="auto"/>
+                <entry name="half"/>
+                <entry name="full"/>
+              </duplex>
+              <speed>
+                <entry name="auto"/>
+                <entry name="10"/>
+                <entry name="100"/>
+                <entry name="1000"/>
+              </speed>
+            </entry>
+            <entry name="ethernet1/5">
+              <duplex>
+                <entry name="auto"/>
+                <entry name="half"/>
+                <entry name="full"/>
+              </duplex>
+              <speed>
+                <entry name="auto"/>
+                <entry name="10"/>
+                <entry name="100"/>
+                <entry name="1000"/>
+              </speed>
+            </entry>
+            <entry name="ethernet1/6">
+              <duplex>
+                <entry name="auto"/>
+                <entry name="half"/>
+                <entry name="full"/>
+              </duplex>
+              <speed>
+                <entry name="auto"/>
+                <entry name="10"/>
+                <entry name="100"/>
+                <entry name="1000"/>
+              </speed>
+            </entry>
+            <entry name="ethernet1/7">
+              <duplex>
+                <entry name="auto"/>
+                <entry name="half"/>
+                <entry name="full"/>
+              </duplex>
+              <speed>
+                <entry name="auto"/>
+                <entry name="10"/>
+                <entry name="100"/>
+                <entry name="1000"/>
+              </speed>
+            </entry>
+            <entry name="ethernet1/8">
+              <duplex>
+                <entry name="auto"/>
+                <entry name="half"/>
+                <entry name="full"/>
+              </duplex>
+              <speed>
+                <entry name="auto"/>
+                <entry name="10"/>
+                <entry name="100"/>
+                <entry name="1000"/>
+              </speed>
+            </entry>
+          </ethernet>
+        </interfaces>
+      </platform>
+    </entry>
+  </devices>
+</result></response>

@@ -1,0 +1,150 @@
+{
+  "overall_ok": false,
+  "badge": {
+    "text": "CHANGE COMPLETED WITH ALERTS",
+    "tone": "warning"
+  },
+  "execution_time_s": 40.63628847699147,
+  "execution_time_human": "40.64s",
+  "summary": {
+    "hosts_ok": 1,
+    "hosts_total": 2,
+    "alerts_total": 1
+  },
+  "inputs": {
+    "switch1_hostname": "SW-DC1-AR",
+    "switch2_hostname": "SW-DC1-BR",
+    "vlans": [
+      {
+        "id": 10,
+        "name": "VLAN_DATOS"
+      },
+      {
+        "id": 20,
+        "name": "VLAN_VOZ"
+      },
+      {
+        "id": 50,
+        "name": "VLAN_SEGURIDAD"
+      }
+    ]
+  },
+  "results": {
+    "SW-DC1-AR": {
+      "ok": true,
+      "steps": [
+        {
+          "name": "backup_prechange",
+          "output": "Backup OK: backups/SW-DC1-AR_prechange_20260228_182851.cfg",
+          "elapsed_s": 15.481673174072057,
+          "elapsed_human": "15.48s"
+        },
+        {
+          "name": "create_vlans",
+          "output": "No VLAN changes needed.",
+          "elapsed_s": 0.9914113760460168,
+          "elapsed_human": "0.99s"
+        },
+        {
+          "name": "set_hostname",
+          "output": "Hostname already OK: SW-DC1-AR",
+          "elapsed_s": 1.5572294589364901,
+          "elapsed_human": "1.56s"
+        },
+        {
+          "name": "save_config",
+          "output": "Building configuration...\n\n  Compressed configuration from 3875 bytes to 1827 bytes[OK]",
+          "elapsed_s": 1.7061114170355722,
+          "elapsed_human": "1.71s"
+        },
+        {
+          "name": "backup_postchange",
+          "output": "Backup OK: backups/SW-DC1-AR_postchange_20260228_182858.cfg",
+          "elapsed_s": 3.1530283350730315,
+          "elapsed_human": "3.15s"
+        },
+        {
+          "name": "validate_config",
+          "output": "OK",
+          "elapsed_s": 2.57036437606439,
+          "elapsed_human": "2.57s"
+        }
+      ],
+      "alerts": [],
+      "validation": {
+        "ok": true,
+        "desired_hostname": "SW-DC1-AR",
+        "actual_hostname": "SW-DC1-AR",
+        "desired_vlans": [
+          {
+            "id": 10,
+            "name": "VLAN_DATOS"
+          },
+          {
+            "id": 20,
+            "name": "VLAN_VOZ"
+          },
+          {
+            "id": 50,
+            "name": "VLAN_SEGURIDAD"
+          }
+        ],
+        "deviations": [],
+        "show_vlan_brief": "VLAN Name                             Status    Ports\n---- -------------------------------- --------- -------------------------------\n1    default                          active    Gi0/1, Gi0/2, Gi0/3, Gi1/0\n                                                Gi1/2, Gi1/3, Gi2/0, Gi2/1\n                                                Gi2/2, Gi2/3, Gi3/0, Gi3/1\n                                                Gi3/2, Gi3/3\n10   VLAN_DATOS                       active    Gi1/1\n20   VLAN_VOZ                         active\n50   VLAN_SEGURIDAD                   active\n1002 fddi-default                     act/unsup\n1003 token-ring-default               act/unsup\n1004 fddinet-default                  act/unsup\n1005 trnet-default                    act/unsup",
+        "show_vlan_brief_lines": [
+          "VLAN Name                             Status    Ports",
+          "---- -------------------------------- --------- -------------------------------",
+          "1    default                          active    Gi0/1, Gi0/2, Gi0/3, Gi1/0",
+          "                                                Gi1/2, Gi1/3, Gi2/0, Gi2/1",
+          "                                                Gi2/2, Gi2/3, Gi3/0, Gi3/1",
+          "                                                Gi3/2, Gi3/3",
+          "10   VLAN_DATOS                       active    Gi1/1",
+          "20   VLAN_VOZ                         active",
+          "50   VLAN_SEGURIDAD                   active",
+          "1002 fddi-default                     act/unsup",
+          "1003 token-ring-default               act/unsup",
+          "1004 fddinet-default                  act/unsup",
+          "1005 trnet-default                    act/unsup"
+        ],
+        "show_vlan_brief_full": "\nVLAN Name                             Status    Ports\n---- -------------------------------- --------- -------------------------------\n1    default                          active    Gi0/1, Gi0/2, Gi0/3, Gi1/0, Gi1/2, Gi1/3, Gi2/0, Gi2/1, Gi2/2, Gi2/3, Gi3/0, Gi3/1, Gi3/2, Gi3/3\n10   VLAN_DATOS                       active    Gi1/1\n20   VLAN_VOZ                         active    \n50   VLAN_SEGURIDAD                   active    \n100  Test                             active    \n200  Test2                            active    \n300  Test3                            active    \n1002 fddi-default                     act/unsup \n1003 token-ring-default               act/unsup \n1004 fddinet-default                  act/unsup \n1005 trnet-default                    act/unsup"
+      },
+      "backup_pre": "Backup OK: backups/SW-DC1-AR_prechange_20260228_182851.cfg",
+      "backup_post": "Backup OK: backups/SW-DC1-AR_postchange_20260228_182858.cfg",
+      "backup_pre_file": "SW-DC1-AR_prechange_20260228_182851.cfg",
+      "backup_post_file": "SW-DC1-AR_postchange_20260228_182858.cfg",
+      "timing": {
+        "host_total": 25.459962803986855,
+        "host_total_human": "25.46s"
+      }
+    },
+    "SW-DC1-BR": {
+      "ok": false,
+      "steps": [
+        {
+          "name": "backup_prechange",
+          "output": "Subtask: get_hostname (failed)\n",
+          "elapsed_s": 15.019760090042837,
+          "elapsed_human": "15.02s"
+        },
+        {
+          "name": "exception",
+          "output": "Unhandled exception on host 'SW-DC1-BR': KeyError: 'SW-DC1-BR'",
+          "elapsed_s": 0.0,
+          "elapsed_human": "0.00s"
+        }
+      ],
+      "alerts": [
+        "Unhandled exception on host 'SW-DC1-BR': KeyError: 'SW-DC1-BR'"
+      ],
+      "validation": null,
+      "backup_pre": "Subtask: get_hostname (failed)\n",
+      "backup_post": null,
+      "backup_pre_file": null,
+      "backup_post_file": null,
+      "timing": {
+        "host_total": 15.01997467293404,
+        "host_total_human": "15.02s"
+      }
+    }
+  }
+}

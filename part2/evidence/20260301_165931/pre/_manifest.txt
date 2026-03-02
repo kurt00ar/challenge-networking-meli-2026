@@ -1,0 +1,20 @@
+PRE backup RUN_TS: 20260301_165931
+
+PAN:
+  - Host: 192.168.1.245
+  - Backups dir: /app/part2/backups/paloalto/20260301_165931
+    - pan_running_config.xml
+  - Evidence dir: /app/part2/evidence/20260301_165931/pre
+    - pan_show_system_info.xml
+    - pan_show_vpn_ike_sa.xml
+    - pan_show_vpn_ipsec_sa.xml
+    - pan_show_vpn_tunnel.xml
+    - pan_show_routing_route.xml
+
+FGT:
+  - Host: 192.168.1.240
+  - Backups dir: /app/part2/backups/fortigate/20260301_165931
+    - fgt_backup_config.conf
+  - Evidence dir: /app/part2/evidence/20260301_165931/pre
+    - fgt_system_status.json
+    - fgt_vpn_ipsec.json

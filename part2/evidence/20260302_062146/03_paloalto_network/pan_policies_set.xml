@@ -1,0 +1,5 @@
+<!-- LAN->VPN -->
+<response status="error" code="12"><msg><line><![CDATA[ ALLOW_LAN_TO_VPN -> to 'VPN' is not an allowed keyword]]></line><line><![CDATA[ ALLOW_LAN_TO_VPN -> to 'VPN' is not a valid reference]]></line><line><![CDATA[ ALLOW_LAN_TO_VPN -> to is invalid]]></line></msg></response>
+
+<!-- VPN->LAN -->
+<response status="error" code="12"><msg><line><![CDATA[ ALLOW_VPN_TO_LAN -> from 'VPN' is not an allowed keyword]]></line><line><![CDATA[ ALLOW_VPN_TO_LAN -> from 'VPN' is not a valid reference]]></line><line><![CDATA[ ALLOW_VPN_TO_LAN -> from is invalid]]></line></msg></response>

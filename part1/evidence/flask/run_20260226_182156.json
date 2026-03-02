@@ -1,0 +1,208 @@
+{
+  "overall_ok": true,
+  "badge": {
+    "text": "CHANGE SUCCESSFUL",
+    "tone": "success"
+  },
+  "execution_time_s": 36.537977225962095,
+  "execution_time_human": "36.54s",
+  "summary": {
+    "hosts_ok": 2,
+    "hosts_total": 2,
+    "alerts_total": 0
+  },
+  "inputs": {
+    "switch1_hostname": "SW-DC1-AR",
+    "switch2_hostname": "SW-DC1-BR",
+    "vlans": [
+      {
+        "id": 100,
+        "name": "Test"
+      },
+      {
+        "id": 200,
+        "name": "Test2"
+      },
+      {
+        "id": 300,
+        "name": "Test3"
+      }
+    ]
+  },
+  "results": {
+    "SW-DC1-AR": {
+      "ok": true,
+      "steps": [
+        {
+          "name": "backup_prechange",
+          "output": "Backup OK: backups/SW-DC1-AR_prechange_20260226_182124.cfg",
+          "elapsed_s": 5.130027210980188,
+          "elapsed_human": "5.13s"
+        },
+        {
+          "name": "create_vlans",
+          "output": "create vlan 100 name Test\ncreate vlan 200 name Test2\ncreate vlan 300 name Test3\n\nconfigure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW-DC1-AR(config)#vlan 100\nSW-DC1-AR(config-vlan)#name Test\nSW-DC1-AR(config-vlan)#exit\nSW-DC1-AR(config)#vlan 200\nSW-DC1-AR(config-vlan)#name Test2\nSW-DC1-AR(config-vlan)#exit\nSW-DC1-AR(config)#vlan 300\nSW-DC1-AR(config-vlan)#name Test3\nSW-DC1-AR(config-vlan)#exit\nSW-DC1-AR(config)#end\nSW-DC1-AR#",
+          "elapsed_s": 2.6110577100189403,
+          "elapsed_human": "2.61s"
+        },
+        {
+          "name": "set_hostname",
+          "output": "Hostname already OK: SW-DC1-AR",
+          "elapsed_s": 1.673535292968154,
+          "elapsed_human": "1.67s"
+        },
+        {
+          "name": "save_config",
+          "output": "Building configuration...\n\n  Compressed configuration from 3833 bytes to 1806 bytes[OK]",
+          "elapsed_s": 2.632360209012404,
+          "elapsed_human": "2.63s"
+        },
+        {
+          "name": "backup_postchange",
+          "output": "Backup OK: backups/SW-DC1-AR_postchange_20260226_182134.cfg",
+          "elapsed_s": 3.1004875009530224,
+          "elapsed_human": "3.10s"
+        },
+        {
+          "name": "validate_config",
+          "output": "OK",
+          "elapsed_s": 2.8081520429695956,
+          "elapsed_human": "2.81s"
+        }
+      ],
+      "alerts": [],
+      "validation": {
+        "ok": true,
+        "desired_hostname": "SW-DC1-AR",
+        "actual_hostname": "SW-DC1-AR",
+        "desired_vlans": [
+          {
+            "id": 100,
+            "name": "Test"
+          },
+          {
+            "id": 200,
+            "name": "Test2"
+          },
+          {
+            "id": 300,
+            "name": "Test3"
+          }
+        ],
+        "deviations": [],
+        "show_vlan_brief": "VLAN Name                             Status    Ports\n---- -------------------------------- --------- -------------------------------\n1    default                          active    Gi0/1, Gi0/2, Gi0/3, Gi1/0\n                                                Gi1/1, Gi1/2, Gi1/3, Gi2/0\n                                                Gi2/1, Gi2/2, Gi2/3, Gi3/0\n                                                Gi3/1, Gi3/2, Gi3/3\n100  Test                             active\n200  Test2                            active\n300  Test3                            active\n1002 fddi-default                     act/unsup\n1003 token-ring-default               act/unsup\n1004 fddinet-default                  act/unsup\n1005 trnet-default                    act/unsup",
+        "show_vlan_brief_lines": [
+          "VLAN Name                             Status    Ports",
+          "---- -------------------------------- --------- -------------------------------",
+          "1    default                          active    Gi0/1, Gi0/2, Gi0/3, Gi1/0",
+          "                                                Gi1/1, Gi1/2, Gi1/3, Gi2/0",
+          "                                                Gi2/1, Gi2/2, Gi2/3, Gi3/0",
+          "                                                Gi3/1, Gi3/2, Gi3/3",
+          "100  Test                             active",
+          "200  Test2                            active",
+          "300  Test3                            active",
+          "1002 fddi-default                     act/unsup",
+          "1003 token-ring-default               act/unsup",
+          "1004 fddinet-default                  act/unsup",
+          "1005 trnet-default                    act/unsup"
+        ],
+        "show_vlan_brief_full": "\nVLAN Name                             Status    Ports\n---- -------------------------------- --------- -------------------------------\n1    default                          active    Gi0/1, Gi0/2, Gi0/3, Gi1/0, Gi1/1, Gi1/2, Gi1/3, Gi2/0, Gi2/1, Gi2/2, Gi2/3, Gi3/0, Gi3/1, Gi3/2, Gi3/3\n10   VLAN_DATOS                       active    \n20   VLAN_VOZ                         active    \n50   VLAN_SEGURIDAD                   active    \n100  Test                             active    \n200  Test2                            active    \n300  Test3                            active    \n1002 fddi-default                     act/unsup \n1003 token-ring-default               act/unsup \n1004 fddinet-default                  act/unsup \n1005 trnet-default                    act/unsup"
+      },
+      "backup_pre": "Backup OK: backups/SW-DC1-AR_prechange_20260226_182124.cfg",
+      "backup_post": "Backup OK: backups/SW-DC1-AR_postchange_20260226_182134.cfg",
+      "backup_pre_file": "SW-DC1-AR_prechange_20260226_182124.cfg",
+      "backup_post_file": "SW-DC1-AR_postchange_20260226_182134.cfg",
+      "timing": {
+        "host_total": 17.95602034102194,
+        "host_total_human": "17.96s"
+      }
+    },
+    "SW-DC1-BR": {
+      "ok": true,
+      "steps": [
+        {
+          "name": "backup_prechange",
+          "output": "Backup OK: backups/SW-DC1-BR_prechange_20260226_182142.cfg",
+          "elapsed_s": 5.272986544005107,
+          "elapsed_human": "5.27s"
+        },
+        {
+          "name": "create_vlans",
+          "output": "create vlan 100 name Test\ncreate vlan 200 name Test2\ncreate vlan 300 name Test3\n\nconfigure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW-DC1-BR(config)#vlan 100\nSW-DC1-BR(config-vlan)#name Test\nSW-DC1-BR(config-vlan)#exit\nSW-DC1-BR(config)#vlan 200\nSW-DC1-BR(config-vlan)#name Test2\nSW-DC1-BR(config-vlan)#exit\nSW-DC1-BR(config)#vlan 300\nSW-DC1-BR(config-vlan)#name Test3\nSW-DC1-BR(config-vlan)#exit\nSW-DC1-BR(config)#end\nSW-DC1-BR#",
+          "elapsed_s": 2.9185237939818762,
+          "elapsed_human": "2.92s"
+        },
+        {
+          "name": "set_hostname",
+          "output": "Hostname already OK: SW-DC1-BR",
+          "elapsed_s": 1.77188329200726,
+          "elapsed_human": "1.77s"
+        },
+        {
+          "name": "save_config",
+          "output": "Building configuration...\n\n  Compressed configuration from 3772 bytes to 1766 bytes[OK]",
+          "elapsed_s": 2.438321834022645,
+          "elapsed_human": "2.44s"
+        },
+        {
+          "name": "backup_postchange",
+          "output": "Backup OK: backups/SW-DC1-BR_postchange_20260226_182153.cfg",
+          "elapsed_s": 3.1131771270302124,
+          "elapsed_human": "3.11s"
+        },
+        {
+          "name": "validate_config",
+          "output": "OK",
+          "elapsed_s": 3.0497287099715322,
+          "elapsed_human": "3.05s"
+        }
+      ],
+      "alerts": [],
+      "validation": {
+        "ok": true,
+        "desired_hostname": "SW-DC1-BR",
+        "actual_hostname": "SW-DC1-BR",
+        "desired_vlans": [
+          {
+            "id": 100,
+            "name": "Test"
+          },
+          {
+            "id": 200,
+            "name": "Test2"
+          },
+          {
+            "id": 300,
+            "name": "Test3"
+          }
+        ],
+        "deviations": [],
+        "show_vlan_brief": "VLAN Name                             Status    Ports\n---- -------------------------------- --------- -------------------------------\n1    default                          active    Gi0/0, Gi0/1, Gi0/2, Gi0/3\n                                                Gi1/0, Gi1/1, Gi1/2, Gi1/3\n                                                Gi2/0, Gi2/1, Gi2/2, Gi2/3\n                                                Gi3/0, Gi3/1, Gi3/2, Gi3/3\n100  Test                             active\n200  Test2                            active\n300  Test3                            active\n1002 fddi-default                     act/unsup\n1003 token-ring-default               act/unsup\n1004 fddinet-default                  act/unsup\n1005 trnet-default                    act/unsup",
+        "show_vlan_brief_lines": [
+          "VLAN Name                             Status    Ports",
+          "---- -------------------------------- --------- -------------------------------",
+          "1    default                          active    Gi0/0, Gi0/1, Gi0/2, Gi0/3",
+          "                                                Gi1/0, Gi1/1, Gi1/2, Gi1/3",
+          "                                                Gi2/0, Gi2/1, Gi2/2, Gi2/3",
+          "                                                Gi3/0, Gi3/1, Gi3/2, Gi3/3",
+          "100  Test                             active",
+          "200  Test2                            active",
+          "300  Test3                            active",
+          "1002 fddi-default                     act/unsup",
+          "1003 token-ring-default               act/unsup",
+          "1004 fddinet-default                  act/unsup",
+          "1005 trnet-default                    act/unsup"
+        ],
+        "show_vlan_brief_full": "\nVLAN Name                             Status    Ports\n---- -------------------------------- --------- -------------------------------\n1    default                          active    Gi0/0, Gi0/1, Gi0/2, Gi0/3, Gi1/0, Gi1/1, Gi1/2, Gi1/3, Gi2/0, Gi2/1, Gi2/2, Gi2/3, Gi3/0, Gi3/1, Gi3/2, Gi3/3\n10   VLAN_DATOS                       active    \n20   VLAN_VOZ                         active    \n50   VLAN_SEGURIDAD                   active    \n100  Test                             active    \n200  Test2                            active    \n300  Test3                            active    \n1002 fddi-default                     act/unsup \n1003 token-ring-default               act/unsup \n1004 fddinet-default                  act/unsup \n1005 trnet-default                    act/unsup"
+      },
+      "backup_pre": "Backup OK: backups/SW-DC1-BR_prechange_20260226_182142.cfg",
+      "backup_post": "Backup OK: backups/SW-DC1-BR_postchange_20260226_182153.cfg",
+      "backup_pre_file": "SW-DC1-BR_prechange_20260226_182142.cfg",
+      "backup_post_file": "SW-DC1-BR_postchange_20260226_182153.cfg",
+      "timing": {
+        "host_total": 18.565008717007004,
+        "host_total_human": "18.57s"
+      }
+    }
+  }
+}

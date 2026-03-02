@@ -1,0 +1,74 @@
+# -----------------------------------------------------------------------------
+# Challenge Networking MELI 2026 - Part 2 (VPN)
+# Single Source of Truth (FortiGate + Palo Alto)
+# -----------------------------------------------------------------------------
+
+vpn_name: "VPN_MELI_CHALLENGE"
+
+# FortiGate REAL interface / zone names
+vpn_fgt_wan_if: "port3"
+vpn_fgt_lan_zone: "LAN_ZONE"
+
+vpn_fgt_tunnel_ip_mask: "255.255.255.255"
+
+# Public peers
+vpn_peer_fgt_public_ip: "201.254.16.2"    # FGT WAN IP (lo ve el PA)
+vpn_peer_pan_public_ip: "200.169.116.2"   # PA WAN IP  (lo ve el FGT)
+
+# ✅ Alias CANONICO para playbooks (PA necesita el peer del FGT)
+vpn_peer_ip: "{{ vpn_peer_fgt_public_ip }}"
+
+vpn_psk: "{{ lookup('env', 'VPN_PSK') }}"
+
+# IKE / Phase1
+vpn_ike_version: "ikev2"
+vpn_p1_proposal: "des-sha256"
+vpn_p1_dh_group: "2"
+vpn_p1_lifetime: 28800
+
+vpn_dpd_enabled: true
+vpn_dpd_interval: 10
+vpn_dpd_retry: 3
+
+# IPsec / Phase2
+vpn_p2_proposal: "des-sha256"
+vpn_p2_pfs_group: "2"
+vpn_p2_lifetime: 3600
+
+# Tunnel interface names (route-based)
+vpn_fgt_tunnel_if: "VPN_MELI_CHAL"
+vpn_pan_tunnel_if: "tunnel.10"
+
+# Inside tunnel addressing
+vpn_tunnel_fgt_ip: "169.255.1.1"
+vpn_tunnel_pan_ip: "169.255.1.2"
+
+# Protected networks
+vpn_fgt_inside_subnets:
+  - "10.10.10.0/24"
+
+vpn_pan_inside_subnets:
+  - "10.20.10.0/24"
+
+vpn_fgt_static_route_seq: 10
+
+vpn_fgt_policy_out_id: 3001
+vpn_fgt_policy_in_id: 3002
+
+vpn_validate_ping_from_fgt_to: "{{ vpn_tunnel_pan_ip }}"
+vpn_validate_ping_from_pan_to: "{{ vpn_tunnel_fgt_ip }}"
+
+# Palo Alto defaults
+pan_virtual_router: "default"
+
+# /30 mask para Palo Alto tunnel IP
+vpn_tunnel_mask: "255.255.255.252"
+
+# Zonas
+vpn_zone_wan: "WAN"
+vpn_zone_lan: "LAN"
+vpn_zone_vpn: "VPN"
+
+# Hosts Traffic
+vpn_validate_pan_to_fgt_lan_ip: "10.10.10.10"
+vpn_validate_fgt_to_pan_lan_ip: "10.20.10.10"

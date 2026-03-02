@@ -1,0 +1,324 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Challenge Networking MELI 2026 - Parte 1</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 18px;
+            color: #111;
+        }
+
+        a {
+            color: #111;
+        }
+
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 14px;
+            margin: 10px 0;
+            background: #fff;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border: 0;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .btn-primary {
+            background: #111;
+            color: #fff;
+        }
+
+        .btn-primary:disabled {
+            opacity: .65;
+            cursor: not-allowed;
+        }
+
+        .muted {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .field {
+            margin: 8px 0 14px;
+        }
+
+        input {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 8px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #111;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 520px;
+            max-width: 100%;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            vertical-align: top;
+        }
+
+        th {
+            background: #fafafa;
+            text-align: left;
+        }
+
+        /* nicer indeterminate bar */
+        .progress-wrap {
+            height: 10px;
+            background: #eee;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 10px;
+            width: 40%;
+            background: linear-gradient(90deg,
+                    rgba(17, 17, 17, 0.2),
+                    rgba(17, 17, 17, 0.9),
+                    rgba(17, 17, 17, 0.2));
+            border-radius: 999px;
+            animation: slide 1.1s ease-in-out infinite;
+        }
+
+        @keyframes slide {
+            0% {
+                transform: translateX(-120%);
+            }
+
+            100% {
+                transform: translateX(260%);
+            }
+        }
+
+        .hint {
+            margin-top: 6px;
+        }
+
+        .inline-badge {
+            display: inline-block;
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: #f2f2f2;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Parte 1 - VLANs + Hostname (Nornir)</h1>
+
+    <div class="card">
+        <h2>Topología del laboratorio</h2>
+        <img src="{{ url_for('static', filename='L2-Topology.jpg') }}" alt="Topologia Challenge Networking"
+            style="max-width:100%; height:auto; border:1px solid #ccc; padding:6px; border-radius:12px;">
+        <div class="muted hint">
+            <span class="inline-badge">Tip</span> Dejá una captura de esta pantalla en el README como evidencia.
+        </div>
+    </div>
+
+    <form method="POST" action="/apply" id="applyForm" class="card" novalidate>
+        <h2>Hostnames</h2>
+
+        <div class="field">
+            <label><b>Switch 1 (Argentina)</b> hostname:</label><br>
+            <input name="hostname_switch1" value="{{ default_sw1 }}" required pattern="[A-Za-z0-9\-]{1,63}"
+                title="Solo letras, números y guiones. Máx 63." autocomplete="off" spellcheck="false"
+                style="width:280px;" />
+            <div class="muted hint">Permitido: letras, números y guiones. Máx 63 caracteres.</div>
+        </div>
+
+        <div class="field">
+            <label><b>Switch 2 (Brasil)</b> hostname:</label><br>
+            <input name="hostname_switch2" value="{{ default_sw2 }}" required pattern="[A-Za-z0-9\-]{1,63}"
+                title="Solo letras, números y guiones. Máx 63." autocomplete="off" spellcheck="false"
+                style="width:280px;" />
+            <div class="muted hint">Permitido: letras, números y guiones. Máx 63 caracteres.</div>
+        </div>
+
+        <h2>VLANs (challenge fixed - editable)</h2>
+
+        <div class="muted hint" style="margin-bottom:10px;">
+            Validación automática: IDs únicos, rango 1-4094 y nombres no vacíos.
+        </div>
+
+        <table>
+            <tr>
+                <th style="width:140px;">VLAN ID</th>
+                <th>VLAN Name</th>
+            </tr>
+            <tr>
+                <td>
+                    <input name="vlan_id_1" type="number" min="1" max="4094" value="{{ default_rows[0].id }}" required
+                        style="width:120px;">
+                </td>
+                <td>
+                    <input name="vlan_name_1" type="text" value="{{ default_rows[0].name }}" required
+                        style="width:260px;">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input name="vlan_id_2" type="number" min="1" max="4094" value="{{ default_rows[1].id }}" required
+                        style="width:120px;">
+                </td>
+                <td>
+                    <input name="vlan_name_2" type="text" value="{{ default_rows[1].name }}" required
+                        style="width:260px;">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input name="vlan_id_3" type="number" min="1" max="4094" value="{{ default_rows[2].id }}" required
+                        style="width:120px;">
+                </td>
+                <td>
+                    <input name="vlan_name_3" type="text" value="{{ default_rows[2].name }}" required
+                        style="width:260px;">
+                </td>
+            </tr>
+        </table>
+
+        <br>
+        <button type="submit" class="btn btn-primary" id="btnApply">Apply</button>
+
+        <div id="loading" style="display:none; margin-top:15px;">
+            <b>Aplicando cambios... (20-60s)</b>
+            <div class="progress-wrap" style="margin-top:10px;">
+                <div class="progress-bar"></div>
+            </div>
+            <div class="muted" style="margin-top:8px;">
+                Ejecutando: Backup PRE → VLANs → Hostname → Save → Backup POST → Validación
+            </div>
+        </div>
+
+        <p class="muted" style="margin-top:12px;">
+            Healthcheck: <a href="/health">/health</a>
+        </p>
+    </form>
+
+    <script>
+        const form = document.getElementById("applyForm");
+        const loading = document.getElementById("loading");
+        const btn = document.getElementById("btnApply");
+
+        function val(el) {
+            return (el.value || "").trim();
+        }
+
+        function readVlan(i) {
+            const idEl = document.querySelector(`[name="vlan_id_${i}"]`);
+            const nameEl = document.querySelector(`[name="vlan_name_${i}"]`);
+            const id = parseInt(val(idEl), 10);
+            const name = val(nameEl);
+            return { id, name, idEl, nameEl };
+        }
+
+        function setInvalid(el, isInvalid) {
+            if (!el) return;
+            el.style.borderColor = isInvalid ? "#b00020" : "#ccc";
+        }
+
+        function validateHostnames() {
+            const h1 = document.querySelector(`[name="hostname_switch1"]`);
+            const h2 = document.querySelector(`[name="hostname_switch2"]`);
+
+            const re = /^[A-Za-z0-9\-]{1,63}$/;
+
+            const ok1 = re.test(val(h1));
+            const ok2 = re.test(val(h2));
+
+            setInvalid(h1, !ok1);
+            setInvalid(h2, !ok2);
+
+            if (!ok1 || !ok2) {
+                alert("Error: Hostname inválido. Usá solo letras/números/guiones (máx 63).");
+                return false;
+            }
+            return true;
+        }
+
+        function validateVlans() {
+            const v1 = readVlan(1);
+            const v2 = readVlan(2);
+            const v3 = readVlan(3);
+            const vlans = [v1, v2, v3];
+
+            // Reset styles
+            vlans.forEach(v => { setInvalid(v.idEl, false); setInvalid(v.nameEl, false); });
+
+            // Required (ID + Name)
+            for (const v of vlans) {
+                const idOk = Number.isInteger(v.id);
+                const nameOk = v.name.length > 0;
+
+                setInvalid(v.idEl, !idOk);
+                setInvalid(v.nameEl, !nameOk);
+
+                if (!idOk || !nameOk) {
+                    alert("Error: VLAN incompleta. Asegurate de completar ID y Name en las 3 filas.");
+                    return false;
+                }
+            }
+
+            // Range
+            const outOfRange = vlans.some(v => v.id < 1 || v.id > 4094);
+            if (outOfRange) {
+                vlans.forEach(v => setInvalid(v.idEl, v.id < 1 || v.id > 4094));
+                alert("Error: VLAN ID fuera de rango (1-4094).");
+                return false;
+            }
+
+            // Unique IDs
+            const ids = vlans.map(v => v.id);
+            const hasDup = new Set(ids).size !== ids.length;
+            if (hasDup) {
+                // mark duplicates
+                const seen = {};
+                ids.forEach((id, idx) => { seen[id] = (seen[id] || []).concat(idx); });
+                Object.entries(seen).forEach(([id, idxs]) => {
+                    if (idxs.length > 1) idxs.forEach(i => setInvalid(vlans[i].idEl, true));
+                });
+
+                alert("Error: VLAN IDs repetidos. Cada VLAN ID debe ser único.");
+                return false;
+            }
+
+            return true;
+        }
+
+        form.addEventListener("submit", function (e) {
+            // Frontend validation (más clara que la del browser)
+            const okH = validateHostnames();
+            if (!okH) { e.preventDefault(); return; }
+
+            const okV = validateVlans();
+            if (!okV) { e.preventDefault(); return; }
+
+            // UX submit
+            loading.style.display = "block";
+            btn.disabled = true;
+            btn.innerText = "Working...";
+        });
+    </script>
+</body>
+
+</html>

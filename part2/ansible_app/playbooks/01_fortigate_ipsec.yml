@@ -1,0 +1,168 @@
+---
+- name: "Part2 | Paso 1 - FortiGate | IPsec + tunnel + route + policies (PRESENT/MERGE - NO deletes)"
+  hosts: fgt
+  gather_facts: false
+  collections:
+    - fortinet.fortios
+    - ansible.utils
+
+  vars:
+    # vdom puede venir del .env / env var; default root
+    vdom: "{{ lookup('env','FGT_VDOM') | default('root', true) }}"
+
+  tasks:
+    # -------------------------------------------------------------------------
+    # 0) Preconditions (single source of truth: group_vars/all/vpn.yml)
+    # -------------------------------------------------------------------------
+    - name: "FGT | Assert required vars loaded (vpn.yml)"
+      ansible.builtin.assert:
+        that:
+          - vpn_fgt_wan_if is defined and (vpn_fgt_wan_if | length > 0)
+          - vpn_fgt_lan_zone is defined and (vpn_fgt_lan_zone | length > 0)
+          - vpn_fgt_tunnel_if is defined and (vpn_fgt_tunnel_if | length > 0)
+          - vpn_peer_pan_public_ip is defined and (vpn_peer_pan_public_ip | length > 0)
+          - vpn_psk is defined and (vpn_psk | length > 0)
+          - vpn_p1_proposal is defined and (vpn_p1_proposal | length > 0)
+          - vpn_p2_proposal is defined and (vpn_p2_proposal | length > 0)
+          - vpn_p1_dh_group is defined
+          - vpn_p1_lifetime is defined
+          - vpn_p2_pfs_group is defined
+          - vpn_p2_lifetime is defined
+          - vpn_dpd_interval is defined
+          - vpn_fgt_inside_subnets is defined and (vpn_fgt_inside_subnets | length > 0)
+          - vpn_pan_inside_subnets is defined and (vpn_pan_inside_subnets | length > 0)
+          - vpn_tunnel_fgt_ip is defined and (vpn_tunnel_fgt_ip | length > 0)
+          - vpn_fgt_tunnel_ip_mask is defined and (vpn_fgt_tunnel_ip_mask | length > 0)
+          - vpn_fgt_static_route_seq is defined
+          - vpn_fgt_policy_out_id is defined
+          - vpn_fgt_policy_in_id is defined
+        fail_msg: >-
+          Faltan variables en inventories/lab/group_vars/all/vpn.yml o no definiste VPN_PSK.
+          Tip: revisá vpn.yml + .env (VPN_PSK, FGT_VDOM opcional).
+
+    # -------------------------------------------------------------------------
+    # 1) Helpers: netmask desde CIDR (para selectors/ruta)
+    #    FortiGate Phase2 espera "IP MASK" (no /24).
+    # -------------------------------------------------------------------------
+    - name: "FGT | Build netmasks from CIDR (first pair only)"
+      ansible.builtin.set_fact:
+        fgt_local_ip: "{{ vpn_fgt_inside_subnets[0].split('/')[0] }}"
+        fgt_local_mask: "{{ vpn_fgt_inside_subnets[0] | ansible.utils.ipaddr('netmask') }}"
+        pan_remote_ip: "{{ vpn_pan_inside_subnets[0].split('/')[0] }}"
+        pan_remote_mask: "{{ vpn_pan_inside_subnets[0] | ansible.utils.ipaddr('netmask') }}"
+
+    # -------------------------------------------------------------------------
+    # 2) Phase1 (PRESENT) - NO deletes, solo converge estado
+    #    Lab constraint: DES + SHA256 + DH2, IKEv2
+    # -------------------------------------------------------------------------
+    - name: "FGT | Phase1 (IKEv2 DES-SHA256 DH{{ vpn_p1_dh_group }}) - present"
+      fortinet.fortios.fortios_vpn_ipsec_phase1_interface:
+        vdom: "{{ vdom }}"
+        state: present
+        vpn_ipsec_phase1_interface:
+          name: "{{ vpn_fgt_tunnel_if }}"
+          interface: "{{ vpn_fgt_wan_if }}"
+          ike_version: "2"
+          peertype: "any"
+          remote_gw: "{{ vpn_peer_pan_public_ip }}"
+          proposal: "{{ vpn_p1_proposal }}"
+          dhgrp: "{{ vpn_p1_dh_group }}"
+          keylife: "{{ vpn_p1_lifetime }}"
+          psksecret: "{{ vpn_psk }}"
+          dpd: "on-idle"
+          dpd_retryinterval: "{{ vpn_dpd_interval }}"
+          nattraversal: "enable"
+          net_device: "enable"
+
+    # -------------------------------------------------------------------------
+    # 3) Phase2 (PRESENT) - selectors local<->remote (first pair)
+    #    Nota: si querés múltiples pares (product), lo armamos después.
+    # -------------------------------------------------------------------------
+    - name: "FGT | Phase2 (selectors local<->remote) - present"
+      fortinet.fortios.fortios_vpn_ipsec_phase2_interface:
+        vdom: "{{ vdom }}"
+        state: present
+        vpn_ipsec_phase2_interface:
+          name: "{{ vpn_fgt_tunnel_if }}_P2"
+          phase1name: "{{ vpn_fgt_tunnel_if }}"
+          proposal: "{{ vpn_p2_proposal }}"
+          pfs: "enable"
+          dhgrp: "{{ vpn_p2_pfs_group }}"
+          keylifeseconds: "{{ vpn_p2_lifetime }}"
+          src_subnet: "{{ fgt_local_ip }} {{ fgt_local_mask }}"
+          dst_subnet: "{{ pan_remote_ip }} {{ pan_remote_mask }}"
+
+    # -------------------------------------------------------------------------
+    # 4) Tunnel interface IP + allow ping
+    #    En tu lab, FortiOS tunnel IP suele ir /32 (255.255.255.255)
+    # -------------------------------------------------------------------------
+    - name: "FGT | Tunnel interface IP + allow ping - present"
+      fortinet.fortios.fortios_system_interface:
+        vdom: "{{ vdom }}"
+        state: present
+        system_interface:
+          name: "{{ vpn_fgt_tunnel_if }}"
+          type: "tunnel"
+          ip: "{{ vpn_tunnel_fgt_ip }} {{ vpn_fgt_tunnel_ip_mask }}"
+          allowaccess: "ping"
+
+    # -------------------------------------------------------------------------
+    # 5) Static route to PAN LAN via tunnel (PRESENT)
+    #    Mantengo tu "seq_num" estable para el evaluador.
+    # -------------------------------------------------------------------------
+    - name: "FGT | Static route to PAN LAN via tunnel - present"
+      fortinet.fortios.fortios_router_static:
+        vdom: "{{ vdom }}"
+        state: present
+        router_static:
+          seq_num: "{{ vpn_fgt_static_route_seq }}"
+          dst: "{{ pan_remote_ip }} {{ pan_remote_mask }}"
+          device: "{{ vpn_fgt_tunnel_if }}"
+
+    # -------------------------------------------------------------------------
+    # 6) Policies (PRESENT) - MUST use LAN_ZONE, NO NAT, log all
+    #    Mantengo tus policy IDs estables.
+    # -------------------------------------------------------------------------
+    - name: "FGT | Policy LAN_ZONE -> VPN (no NAT, log all) - present"
+      fortinet.fortios.fortios_firewall_policy:
+        vdom: "{{ vdom }}"
+        state: present
+        firewall_policy:
+          policyid: "{{ vpn_fgt_policy_out_id }}"
+          name: "LAN_to_VPN_MELI"
+          srcintf:
+            - name: "{{ vpn_fgt_lan_zone }}"
+          dstintf:
+            - name: "{{ vpn_fgt_tunnel_if }}"
+          action: "accept"
+          srcaddr:
+            - name: "all"
+          dstaddr:
+            - name: "all"
+          schedule: "always"
+          service:
+            - name: "ALL"
+          nat: "disable"
+          logtraffic: "all"
+
+    - name: "FGT | Policy VPN -> LAN_ZONE (no NAT, log all) - present"
+      fortinet.fortios.fortios_firewall_policy:
+        vdom: "{{ vdom }}"
+        state: present
+        firewall_policy:
+          policyid: "{{ vpn_fgt_policy_in_id }}"
+          name: "VPN_to_LAN_MELI"
+          srcintf:
+            - name: "{{ vpn_fgt_tunnel_if }}"
+          dstintf:
+            - name: "{{ vpn_fgt_lan_zone }}"
+          action: "accept"
+          srcaddr:
+            - name: "all"
+          dstaddr:
+            - name: "all"
+          schedule: "always"
+          service:
+            - name: "ALL"
+          nat: "disable"
+          logtraffic: "all"

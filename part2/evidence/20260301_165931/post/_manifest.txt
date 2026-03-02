@@ -1,0 +1,16 @@
+POST backup RUN_TS: 20260301_165931
+
+PAN:
+  - Backups dir: /app/part2/backups/paloalto/20260301_165931
+    - pan_running_config_POST.xml
+  - Evidence dir: /app/part2/evidence/20260301_165931/post
+    - post_pan_show_vpn_ike_sa.xml
+    - post_pan_show_vpn_ipsec_sa.xml
+    - post_pan_show_vpn_tunnel.xml
+    - post_pan_show_routing_route.xml
+
+FGT:
+  - Backups dir: /app/part2/backups/fortigate/20260301_165931
+    - fgt_backup_config_POST.conf
+  - Evidence dir: /app/part2/evidence/20260301_165931/post
+    - post_fgt_vpn_ipsec.json

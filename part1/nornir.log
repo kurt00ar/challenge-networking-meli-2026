@@ -1,0 +1,1022 @@
+2026-02-24 23:21:52,824 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'hostname': 'SW-DC1-AR'} on 1 hosts
+2026-02-24 23:22:02,360 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'hostname': 'SW-DC1-AR'} on 1 hosts
+2026-02-24 23:22:02,561 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-AR': task 'netmiko_send_config' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1146, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 483, in connect
+    self._auth(
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 815, in _auth
+    raise SSHException("No authentication methods available")
+paramiko.ssh_exception.SSHException: No authentication methods available
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/tasks/netmiko_send_config.py", line 28, in netmiko_send_config
+    net_connect = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 494, in get_connection
+    self.open_connection(
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 546, in open_connection
+    conn_obj.open(
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/connections/netmiko.py", line 59, in open
+    connection = ConnectHandler(**parameters)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/ssh_dispatcher.py", line 460, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 495, in __init__
+    self._open()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 500, in _open
+    self.establish_connection()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1199, in establish_connection
+    raise NetmikoTimeoutException(msg)
+netmiko.exceptions.NetmikoTimeoutException: 
+A paramiko SSHException occurred during connection creation:
+
+No authentication methods available
+
+
+
+2026-02-24 23:22:02,562 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-AR': task 'set_hostname' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/app/nornir_app/vlan_tasks.py", line 6, in set_hostname
+    r = task.run(task=netmiko_send_config, config_commands=cfg)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 174, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: netmiko_send_config (failed)
+
+
+2026-02-24 23:22:02,562 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-24 23:22:02,562 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'hostname': 'SW-DC1-BR'} on 1 hosts
+2026-02-24 23:22:03,690 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'hostname': 'SW-DC1-AR'} on 1 hosts
+2026-02-24 23:22:03,897 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-AR': task 'netmiko_send_config' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1146, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 483, in connect
+    self._auth(
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 815, in _auth
+    raise SSHException("No authentication methods available")
+paramiko.ssh_exception.SSHException: No authentication methods available
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/tasks/netmiko_send_config.py", line 28, in netmiko_send_config
+    net_connect = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 494, in get_connection
+    self.open_connection(
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 546, in open_connection
+    conn_obj.open(
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/connections/netmiko.py", line 59, in open
+    connection = ConnectHandler(**parameters)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/ssh_dispatcher.py", line 460, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 495, in __init__
+    self._open()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 500, in _open
+    self.establish_connection()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1199, in establish_connection
+    raise NetmikoTimeoutException(msg)
+netmiko.exceptions.NetmikoTimeoutException: 
+A paramiko SSHException occurred during connection creation:
+
+No authentication methods available
+
+
+
+2026-02-24 23:22:03,897 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-AR': task 'set_hostname' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/app/nornir_app/vlan_tasks.py", line 6, in set_hostname
+    r = task.run(task=netmiko_send_config, config_commands=cfg)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 174, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: netmiko_send_config (failed)
+
+
+2026-02-24 23:22:03,897 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-24 23:22:03,897 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'hostname': 'SW-DC1-BR'} on 1 hosts
+2026-02-24 23:22:04,020 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-AR': task 'netmiko_send_config' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1146, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 483, in connect
+    self._auth(
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 815, in _auth
+    raise SSHException("No authentication methods available")
+paramiko.ssh_exception.SSHException: No authentication methods available
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/tasks/netmiko_send_config.py", line 28, in netmiko_send_config
+    net_connect = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 494, in get_connection
+    self.open_connection(
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 546, in open_connection
+    conn_obj.open(
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/connections/netmiko.py", line 59, in open
+    connection = ConnectHandler(**parameters)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/ssh_dispatcher.py", line 460, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 495, in __init__
+    self._open()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 500, in _open
+    self.establish_connection()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1199, in establish_connection
+    raise NetmikoTimeoutException(msg)
+netmiko.exceptions.NetmikoTimeoutException: 
+A paramiko SSHException occurred during connection creation:
+
+No authentication methods available
+
+
+
+2026-02-24 23:22:04,021 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-AR': task 'set_hostname' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/app/nornir_app/vlan_tasks.py", line 6, in set_hostname
+    r = task.run(task=netmiko_send_config, config_commands=cfg)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 174, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: netmiko_send_config (failed)
+
+
+2026-02-24 23:22:04,021 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-24 23:22:04,021 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'hostname': 'SW-DC1-BR'} on 1 hosts
+2026-02-24 23:22:11,295 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-BR': task 'netmiko_send_config' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1146, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 483, in connect
+    self._auth(
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 815, in _auth
+    raise SSHException("No authentication methods available")
+paramiko.ssh_exception.SSHException: No authentication methods available
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/tasks/netmiko_send_config.py", line 28, in netmiko_send_config
+    net_connect = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 494, in get_connection
+    self.open_connection(
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 546, in open_connection
+    conn_obj.open(
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/connections/netmiko.py", line 59, in open
+    connection = ConnectHandler(**parameters)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/ssh_dispatcher.py", line 460, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 495, in __init__
+    self._open()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 500, in _open
+    self.establish_connection()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1199, in establish_connection
+    raise NetmikoTimeoutException(msg)
+netmiko.exceptions.NetmikoTimeoutException: 
+A paramiko SSHException occurred during connection creation:
+
+No authentication methods available
+
+
+
+2026-02-24 23:22:11,295 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-BR': task 'netmiko_send_config' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1146, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 483, in connect
+    self._auth(
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 815, in _auth
+    raise SSHException("No authentication methods available")
+paramiko.ssh_exception.SSHException: No authentication methods available
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/tasks/netmiko_send_config.py", line 28, in netmiko_send_config
+    net_connect = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 494, in get_connection
+    self.open_connection(
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 546, in open_connection
+    conn_obj.open(
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/connections/netmiko.py", line 59, in open
+    connection = ConnectHandler(**parameters)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/ssh_dispatcher.py", line 460, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 495, in __init__
+    self._open()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 500, in _open
+    self.establish_connection()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1199, in establish_connection
+    raise NetmikoTimeoutException(msg)
+netmiko.exceptions.NetmikoTimeoutException: 
+A paramiko SSHException occurred during connection creation:
+
+No authentication methods available
+
+
+
+2026-02-24 23:22:11,298 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-BR': task 'set_hostname' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/app/nornir_app/vlan_tasks.py", line 6, in set_hostname
+    r = task.run(task=netmiko_send_config, config_commands=cfg)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 174, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: netmiko_send_config (failed)
+
+
+2026-02-24 23:22:11,298 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-BR': task 'set_hostname' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/app/nornir_app/vlan_tasks.py", line 6, in set_hostname
+    r = task.run(task=netmiko_send_config, config_commands=cfg)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 174, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: netmiko_send_config (failed)
+
+
+2026-02-24 23:22:11,298 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-24 23:22:11,298 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-24 23:22:13,829 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-BR': task 'netmiko_send_config' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1146, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 483, in connect
+    self._auth(
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 815, in _auth
+    raise SSHException("No authentication methods available")
+paramiko.ssh_exception.SSHException: No authentication methods available
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/tasks/netmiko_send_config.py", line 28, in netmiko_send_config
+    net_connect = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 494, in get_connection
+    self.open_connection(
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 546, in open_connection
+    conn_obj.open(
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/connections/netmiko.py", line 59, in open
+    connection = ConnectHandler(**parameters)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/ssh_dispatcher.py", line 460, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 495, in __init__
+    self._open()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 500, in _open
+    self.establish_connection()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1199, in establish_connection
+    raise NetmikoTimeoutException(msg)
+netmiko.exceptions.NetmikoTimeoutException: 
+A paramiko SSHException occurred during connection creation:
+
+No authentication methods available
+
+
+
+2026-02-24 23:22:13,830 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-BR': task 'set_hostname' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/app/nornir_app/vlan_tasks.py", line 6, in set_hostname
+    r = task.run(task=netmiko_send_config, config_commands=cfg)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 174, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: netmiko_send_config (failed)
+
+
+2026-02-24 23:22:13,830 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-24 23:33:35,798 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'hostname': 'SW-DC1-AR'} on 1 hosts
+2026-02-24 23:33:47,076 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-AR': task 'netmiko_send_config' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1146, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 483, in connect
+    self._auth(
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 815, in _auth
+    raise SSHException("No authentication methods available")
+paramiko.ssh_exception.SSHException: No authentication methods available
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/tasks/netmiko_send_config.py", line 28, in netmiko_send_config
+    net_connect = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 494, in get_connection
+    self.open_connection(
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 546, in open_connection
+    conn_obj.open(
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/connections/netmiko.py", line 59, in open
+    connection = ConnectHandler(**parameters)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/ssh_dispatcher.py", line 460, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 495, in __init__
+    self._open()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 500, in _open
+    self.establish_connection()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1199, in establish_connection
+    raise NetmikoTimeoutException(msg)
+netmiko.exceptions.NetmikoTimeoutException: 
+A paramiko SSHException occurred during connection creation:
+
+No authentication methods available
+
+
+
+2026-02-24 23:33:47,076 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-AR': task 'set_hostname' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/app/nornir_app/vlan_tasks.py", line 6, in set_hostname
+    r = task.run(task=netmiko_send_config, config_commands=cfg)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 174, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: netmiko_send_config (failed)
+
+
+2026-02-24 23:33:47,076 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'hostname': 'SW-DC1-BR'} on 1 hosts
+2026-02-24 23:33:58,425 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-BR': task 'netmiko_send_config' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1146, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 483, in connect
+    self._auth(
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 815, in _auth
+    raise SSHException("No authentication methods available")
+paramiko.ssh_exception.SSHException: No authentication methods available
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/tasks/netmiko_send_config.py", line 28, in netmiko_send_config
+    net_connect = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 494, in get_connection
+    self.open_connection(
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 546, in open_connection
+    conn_obj.open(
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/connections/netmiko.py", line 59, in open
+    connection = ConnectHandler(**parameters)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/ssh_dispatcher.py", line 460, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 495, in __init__
+    self._open()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 500, in _open
+    self.establish_connection()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1199, in establish_connection
+    raise NetmikoTimeoutException(msg)
+netmiko.exceptions.NetmikoTimeoutException: 
+A paramiko SSHException occurred during connection creation:
+
+No authentication methods available
+
+
+
+2026-02-24 23:33:58,426 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-BR': task 'set_hostname' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/app/nornir_app/vlan_tasks.py", line 6, in set_hostname
+    r = task.run(task=netmiko_send_config, config_commands=cfg)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 174, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: netmiko_send_config (failed)
+
+
+2026-02-25 00:07:18,378 -  nornir.core -     INFO -        run() - Running task 'netmiko_send_command' with args {'command_string': 'show ip ssh'} on 2 hosts
+2026-02-25 00:07:18,575 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-AR': task 'netmiko_send_command' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1146, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 483, in connect
+    self._auth(
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 815, in _auth
+    raise SSHException("No authentication methods available")
+paramiko.ssh_exception.SSHException: No authentication methods available
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/tasks/netmiko_send_command.py", line 26, in netmiko_send_command
+    net_connect = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 494, in get_connection
+    self.open_connection(
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 546, in open_connection
+    conn_obj.open(
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/connections/netmiko.py", line 59, in open
+    connection = ConnectHandler(**parameters)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/ssh_dispatcher.py", line 460, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 495, in __init__
+    self._open()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 500, in _open
+    self.establish_connection()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1199, in establish_connection
+    raise NetmikoTimeoutException(msg)
+netmiko.exceptions.NetmikoTimeoutException: 
+A paramiko SSHException occurred during connection creation:
+
+No authentication methods available
+
+
+
+2026-02-25 00:07:29,621 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-BR': task 'netmiko_send_command' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1146, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 483, in connect
+    self._auth(
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 815, in _auth
+    raise SSHException("No authentication methods available")
+paramiko.ssh_exception.SSHException: No authentication methods available
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/tasks/netmiko_send_command.py", line 26, in netmiko_send_command
+    net_connect = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 494, in get_connection
+    self.open_connection(
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 546, in open_connection
+    conn_obj.open(
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/connections/netmiko.py", line 59, in open
+    connection = ConnectHandler(**parameters)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/ssh_dispatcher.py", line 460, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 495, in __init__
+    self._open()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 500, in _open
+    self.establish_connection()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1199, in establish_connection
+    raise NetmikoTimeoutException(msg)
+netmiko.exceptions.NetmikoTimeoutException: 
+A paramiko SSHException occurred during connection creation:
+
+No authentication methods available
+
+
+
+2026-02-25 00:23:40,473 -  nornir.core -     INFO -        run() - Running task 'netmiko_send_command' with args {'command_string': 'show ip ssh'} on 2 hosts
+2026-02-25 00:23:41,032 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-AR': task 'netmiko_send_command' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1146, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 483, in connect
+    self._auth(
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 815, in _auth
+    raise SSHException("No authentication methods available")
+paramiko.ssh_exception.SSHException: No authentication methods available
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/tasks/netmiko_send_command.py", line 26, in netmiko_send_command
+    net_connect = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 494, in get_connection
+    self.open_connection(
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 546, in open_connection
+    conn_obj.open(
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/connections/netmiko.py", line 59, in open
+    connection = ConnectHandler(**parameters)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/ssh_dispatcher.py", line 460, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 495, in __init__
+    self._open()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 500, in _open
+    self.establish_connection()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1199, in establish_connection
+    raise NetmikoTimeoutException(msg)
+netmiko.exceptions.NetmikoTimeoutException: 
+A paramiko SSHException occurred during connection creation:
+
+No authentication methods available
+
+
+
+2026-02-25 00:23:51,749 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-BR': task 'netmiko_send_command' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1146, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 483, in connect
+    self._auth(
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 815, in _auth
+    raise SSHException("No authentication methods available")
+paramiko.ssh_exception.SSHException: No authentication methods available
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/tasks/netmiko_send_command.py", line 26, in netmiko_send_command
+    net_connect = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 494, in get_connection
+    self.open_connection(
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 546, in open_connection
+    conn_obj.open(
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/connections/netmiko.py", line 59, in open
+    connection = ConnectHandler(**parameters)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/ssh_dispatcher.py", line 460, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 495, in __init__
+    self._open()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 500, in _open
+    self.establish_connection()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1199, in establish_connection
+    raise NetmikoTimeoutException(msg)
+netmiko.exceptions.NetmikoTimeoutException: 
+A paramiko SSHException occurred during connection creation:
+
+No authentication methods available
+
+
+
+2026-02-25 00:37:40,585 -  nornir.core -     INFO -        run() - Running task 'netmiko_send_command' with args {'command_string': 'show ip ssh'} on 2 hosts
+2026-02-25 00:37:50,589 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-AR': task 'netmiko_send_command' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1146, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 384, in connect
+    sock.connect(addr)
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/tasks/netmiko_send_command.py", line 26, in netmiko_send_command
+    net_connect = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 494, in get_connection
+    self.open_connection(
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 546, in open_connection
+    conn_obj.open(
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/connections/netmiko.py", line 59, in open
+    connection = ConnectHandler(**parameters)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/ssh_dispatcher.py", line 460, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 495, in __init__
+    self._open()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 500, in _open
+    self.establish_connection()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1168, in establish_connection
+    raise NetmikoTimeoutException(msg)
+netmiko.exceptions.NetmikoTimeoutException: TCP connection to device failed.
+
+Common causes of this problem are:
+1. Incorrect hostname or IP address.
+2. Wrong TCP port.
+3. Intermediate firewall blocking access.
+
+Device settings: cisco_ios 192.168.1.241:22
+
+
+
+2026-02-25 00:37:50,589 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-BR': task 'netmiko_send_command' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1146, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 384, in connect
+    sock.connect(addr)
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/tasks/netmiko_send_command.py", line 26, in netmiko_send_command
+    net_connect = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 494, in get_connection
+    self.open_connection(
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 546, in open_connection
+    conn_obj.open(
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/connections/netmiko.py", line 59, in open
+    connection = ConnectHandler(**parameters)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/ssh_dispatcher.py", line 460, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 495, in __init__
+    self._open()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 500, in _open
+    self.establish_connection()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1168, in establish_connection
+    raise NetmikoTimeoutException(msg)
+netmiko.exceptions.NetmikoTimeoutException: TCP connection to device failed.
+
+Common causes of this problem are:
+1. Incorrect hostname or IP address.
+2. Wrong TCP port.
+3. Intermediate firewall blocking access.
+
+Device settings: cisco_ios 192.168.1.246:22
+
+
+
+2026-02-25 00:41:54,832 -  nornir.core -     INFO -        run() - Running task 'netmiko_send_command' with args {'command_string': 'show ip ssh'} on 1 hosts
+2026-02-25 00:41:55,003 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-AR': task 'netmiko_send_command' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1146, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 483, in connect
+    self._auth(
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 815, in _auth
+    raise SSHException("No authentication methods available")
+paramiko.ssh_exception.SSHException: No authentication methods available
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/tasks/netmiko_send_command.py", line 26, in netmiko_send_command
+    net_connect = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 494, in get_connection
+    self.open_connection(
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 546, in open_connection
+    conn_obj.open(
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/connections/netmiko.py", line 59, in open
+    connection = ConnectHandler(**parameters)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/ssh_dispatcher.py", line 460, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 495, in __init__
+    self._open()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 500, in _open
+    self.establish_connection()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1199, in establish_connection
+    raise NetmikoTimeoutException(msg)
+netmiko.exceptions.NetmikoTimeoutException: 
+A paramiko SSHException occurred during connection creation:
+
+No authentication methods available
+
+
+
+2026-02-25 00:45:50,160 -  nornir.core -     INFO -        run() - Running task 'netmiko_send_command' with args {'command_string': 'show ip ssh'} on 2 hosts
+2026-02-25 00:46:00,168 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-BR': task 'netmiko_send_command' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1146, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 384, in connect
+    sock.connect(addr)
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/tasks/netmiko_send_command.py", line 26, in netmiko_send_command
+    net_connect = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 494, in get_connection
+    self.open_connection(
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 546, in open_connection
+    conn_obj.open(
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/connections/netmiko.py", line 59, in open
+    connection = ConnectHandler(**parameters)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/ssh_dispatcher.py", line 460, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 495, in __init__
+    self._open()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 500, in _open
+    self.establish_connection()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1168, in establish_connection
+    raise NetmikoTimeoutException(msg)
+netmiko.exceptions.NetmikoTimeoutException: TCP connection to device failed.
+
+Common causes of this problem are:
+1. Incorrect hostname or IP address.
+2. Wrong TCP port.
+3. Intermediate firewall blocking access.
+
+Device settings: cisco_ios 192.168.1.246:22
+
+
+
+2026-02-25 00:47:47,504 -  nornir.core -     INFO -        run() - Running task 'netmiko_send_command' with args {'command_string': 'show ip ssh'} on 2 hosts
+2026-02-25 00:49:08,211 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'hostname': 'SW-DC1-AR'} on 1 hosts
+2026-02-25 00:49:09,458 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 00:49:19,466 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-AR': task 'netmiko_send_config' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/tasks/netmiko_send_config.py", line 36, in netmiko_send_config
+    net_connect.enable()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/cisco_base_connection.py", line 27, in enable
+    return super().enable(
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 2042, in enable
+    if check_state and self.check_enable_mode():
+  File "/usr/local/lib/python3.10/site-packages/netmiko/cisco_base_connection.py", line 16, in check_enable_mode
+    return super().check_enable_mode(check_string=check_string)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 2011, in check_enable_mode
+    output = self.read_until_prompt(read_entire_line=True)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 846, in read_until_prompt
+    return self.read_until_pattern(
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 755, in read_until_pattern
+    raise ReadTimeout(msg)
+netmiko.exceptions.ReadTimeout: 
+
+Pattern not detected: 'Switch.*' in output.
+
+Things you might try to fix this:
+1. Adjust the regex pattern to better identify the terminating string. Note, in
+many situations the pattern is automatically based on the network device's prompt.
+2. Increase the read_timeout to a larger value.
+
+You can also look at the Netmiko session_log or debug log for more information.
+
+
+
+2026-02-25 00:49:19,468 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-AR': task 'create_vlans' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/app/nornir_app/vlan_tasks.py", line 28, in create_vlans
+    r = task.run(task=netmiko_send_config, config_commands=commands)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 174, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: netmiko_send_config (failed)
+
+
+2026-02-25 00:49:19,469 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'hostname': 'SW-DC1-BR'} on 1 hosts
+2026-02-25 00:49:20,715 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 00:49:30,726 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-BR': task 'netmiko_send_config' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/tasks/netmiko_send_config.py", line 36, in netmiko_send_config
+    net_connect.enable()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/cisco_base_connection.py", line 27, in enable
+    return super().enable(
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 2042, in enable
+    if check_state and self.check_enable_mode():
+  File "/usr/local/lib/python3.10/site-packages/netmiko/cisco_base_connection.py", line 16, in check_enable_mode
+    return super().check_enable_mode(check_string=check_string)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 2011, in check_enable_mode
+    output = self.read_until_prompt(read_entire_line=True)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 846, in read_until_prompt
+    return self.read_until_pattern(
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 755, in read_until_pattern
+    raise ReadTimeout(msg)
+netmiko.exceptions.ReadTimeout: 
+
+Pattern not detected: 'Switch.*' in output.
+
+Things you might try to fix this:
+1. Adjust the regex pattern to better identify the terminating string. Note, in
+many situations the pattern is automatically based on the network device's prompt.
+2. Increase the read_timeout to a larger value.
+
+You can also look at the Netmiko session_log or debug log for more information.
+
+
+
+2026-02-25 00:49:30,728 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-BR': task 'create_vlans' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/app/nornir_app/vlan_tasks.py", line 28, in create_vlans
+    r = task.run(task=netmiko_send_config, config_commands=commands)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 174, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: netmiko_send_config (failed)
+
+
+2026-02-25 01:18:54,324 -  nornir.core -     INFO -        run() - Running task 'netmiko_send_command' with args {'command_string': 'show version | i IOSv'} on 2 hosts
+2026-02-25 01:30:35,991 -  nornir.core -     INFO -        run() - Running task 'apply_all' with args {'desired_hostname': '', 'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 01:30:52,930 -  nornir.core -     INFO -        run() - Running task 'apply_all' with args {'desired_hostname': '', 'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 01:48:50,251 -  nornir.core -     INFO -        run() - Running task 'apply_all' with args {'desired_hostname': 'SW-DC1-AR', 'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 01:49:07,839 -  nornir.core -     INFO -        run() - Running task 'apply_all' with args {'desired_hostname': 'SW-DC1-BR', 'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 01:58:56,926 -  nornir.core -     INFO -        run() - Running task 'apply_all' with args {'desired_hostname': '', 'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 01:59:00,620 -  nornir.core -     INFO -        run() - Running task 'apply_all' with args {'desired_hostname': '', 'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 02:16:33,140 -  nornir.core -     INFO -        run() - Running task 'task_apply_all' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}], 'desired_hostname': 'SW-DC1-AR'} on 1 hosts
+2026-02-25 02:16:36,949 -  nornir.core -     INFO -        run() - Running task 'task_apply_all' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}], 'desired_hostname': 'SW-DC1-BR'} on 1 hosts
+2026-02-25 02:17:43,912 -  nornir.core -     INFO -        run() - Running task 'task_apply_all' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 80, 'name': 'VLAN_TEST'}], 'desired_hostname': 'SW-DC1-AR'} on 1 hosts
+2026-02-25 02:17:47,969 -  nornir.core -     INFO -        run() - Running task 'task_apply_all' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 80, 'name': 'VLAN_TEST'}], 'desired_hostname': 'SW-DC1-BR'} on 1 hosts
+2026-02-25 02:57:12,913 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 02:57:27,170 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'desired_hostname': 'SW-DC1-AR'} on 1 hosts
+2026-02-25 02:57:27,561 -  nornir.core -     INFO -        run() - Running task 'save_config' with args {} on 1 hosts
+2026-02-25 02:57:30,036 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups'} on 1 hosts
+2026-02-25 02:57:33,156 -  nornir.core -     INFO -        run() - Running task 'validate_config' with args {'desired_hostname': 'SW-DC1-AR', 'desired_vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 02:57:35,706 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 02:57:50,105 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'desired_hostname': 'SW-DC1-BR'} on 1 hosts
+2026-02-25 02:57:50,412 -  nornir.core -     INFO -        run() - Running task 'save_config' with args {} on 1 hosts
+2026-02-25 02:57:52,847 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups'} on 1 hosts
+2026-02-25 02:57:56,249 -  nornir.core -     INFO -        run() - Running task 'validate_config' with args {'desired_hostname': 'SW-DC1-BR', 'desired_vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 03:16:31,458 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'prechange'} on 1 hosts
+2026-02-25 03:16:47,113 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 03:16:47,898 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'desired_hostname': 'SW-DC1-AR'} on 1 hosts
+2026-02-25 03:16:48,200 -  nornir.core -     INFO -        run() - Running task 'save_config' with args {} on 1 hosts
+2026-02-25 03:16:50,609 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'postchange'} on 1 hosts
+2026-02-25 03:16:53,641 -  nornir.core -     INFO -        run() - Running task 'validate_config' with args {'desired_hostname': 'SW-DC1-AR', 'desired_vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 03:16:56,228 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'prechange'} on 1 hosts
+2026-02-25 03:17:11,918 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 03:17:12,710 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'desired_hostname': 'SW-DC1-BR'} on 1 hosts
+2026-02-25 03:17:13,143 -  nornir.core -     INFO -        run() - Running task 'save_config' with args {} on 1 hosts
+2026-02-25 03:17:15,574 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'postchange'} on 1 hosts
+2026-02-25 03:17:18,760 -  nornir.core -     INFO -        run() - Running task 'validate_config' with args {'desired_hostname': 'SW-DC1-BR', 'desired_vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 03:38:32,010 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'prechange'} on 1 hosts
+2026-02-25 03:38:47,678 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 03:38:48,699 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'desired_hostname': 'SW-DC1-AR'} on 1 hosts
+2026-02-25 03:38:49,032 -  nornir.core -     INFO -        run() - Running task 'save_config' with args {} on 1 hosts
+2026-02-25 03:38:51,470 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'postchange'} on 1 hosts
+2026-02-25 03:38:54,556 -  nornir.core -     INFO -        run() - Running task 'validate_config' with args {'desired_hostname': 'SW-DC1-AR', 'desired_vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 03:38:57,108 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'prechange'} on 1 hosts
+2026-02-25 03:39:12,690 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 03:39:13,420 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'desired_hostname': 'SW-DC1-BR'} on 1 hosts
+2026-02-25 03:39:13,764 -  nornir.core -     INFO -        run() - Running task 'save_config' with args {} on 1 hosts
+2026-02-25 03:39:16,211 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'postchange'} on 1 hosts
+2026-02-25 03:39:19,503 -  nornir.core -     INFO -        run() - Running task 'validate_config' with args {'desired_hostname': 'SW-DC1-BR', 'desired_vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 03:59:06,989 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'prechange'} on 1 hosts
+2026-02-25 03:59:22,620 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 03:59:24,196 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'desired_hostname': 'SW-DC1-AR'} on 1 hosts
+2026-02-25 03:59:24,486 -  nornir.core -     INFO -        run() - Running task 'save_config' with args {} on 1 hosts
+2026-02-25 03:59:26,911 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'postchange'} on 1 hosts
+2026-02-25 03:59:30,016 -  nornir.core -     INFO -        run() - Running task 'validate_config' with args {'desired_hostname': 'SW-DC1-AR', 'desired_vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 03:59:32,575 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'prechange'} on 1 hosts
+2026-02-25 03:59:48,121 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 03:59:49,932 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'desired_hostname': 'SW-DC1-BR'} on 1 hosts
+2026-02-25 03:59:50,332 -  nornir.core -     INFO -        run() - Running task 'save_config' with args {} on 1 hosts
+2026-02-25 03:59:52,741 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'postchange'} on 1 hosts
+2026-02-25 03:59:55,779 -  nornir.core -     INFO -        run() - Running task 'validate_config' with args {'desired_hostname': 'SW-DC1-BR', 'desired_vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 04:09:47,088 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'prechange'} on 1 hosts
+2026-02-25 04:09:51,684 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 04:09:52,486 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'desired_hostname': 'SW-DC1-AR'} on 1 hosts
+2026-02-25 04:09:53,081 -  nornir.core -     INFO -        run() - Running task 'save_config' with args {} on 1 hosts
+2026-02-25 04:09:55,562 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'postchange'} on 1 hosts
+2026-02-25 04:09:58,687 -  nornir.core -     INFO -        run() - Running task 'validate_config' with args {'desired_hostname': 'SW-DC1-AR', 'desired_vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 04:10:01,312 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'prechange'} on 1 hosts
+2026-02-25 04:10:05,855 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 04:10:06,637 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'desired_hostname': 'SW-DC1-BR'} on 1 hosts
+2026-02-25 04:10:07,123 -  nornir.core -     INFO -        run() - Running task 'save_config' with args {} on 1 hosts
+2026-02-25 04:10:09,519 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'postchange'} on 1 hosts
+2026-02-25 04:10:12,721 -  nornir.core -     INFO -        run() - Running task 'validate_config' with args {'desired_hostname': 'SW-DC1-BR', 'desired_vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 06:18:24,747 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'prechange'} on 1 hosts
+2026-02-25 06:18:40,815 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 06:18:41,794 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'desired_hostname': 'SW-DC1-AR'} on 1 hosts
+2026-02-25 06:18:43,332 -  nornir.core -     INFO -        run() - Running task 'save_config' with args {} on 1 hosts
+2026-02-25 06:18:45,489 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'postchange'} on 1 hosts
+2026-02-25 06:18:48,753 -  nornir.core -     INFO -        run() - Running task 'validate_config' with args {'desired_hostname': 'SW-DC1-AR', 'desired_vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 06:18:51,296 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'prechange'} on 1 hosts
+2026-02-25 06:19:07,356 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-25 06:19:08,354 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'desired_hostname': 'SW-DC1-BR'} on 1 hosts
+2026-02-25 06:19:09,998 -  nornir.core -     INFO -        run() - Running task 'save_config' with args {} on 1 hosts
+2026-02-25 06:19:12,132 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'postchange'} on 1 hosts
+2026-02-25 06:19:15,376 -  nornir.core -     INFO -        run() - Running task 'validate_config' with args {'desired_hostname': 'SW-DC1-BR', 'desired_vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-26 18:19:10,549 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'prechange'} on 1 hosts
+2026-02-26 18:19:15,040 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-26 18:19:16,033 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'desired_hostname': 'SW-DC1-AR'} on 1 hosts
+2026-02-26 18:19:17,611 -  nornir.core -     INFO -        run() - Running task 'save_config' with args {} on 1 hosts
+2026-02-26 18:19:20,602 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'postchange'} on 1 hosts
+2026-02-26 18:19:23,682 -  nornir.core -     INFO -        run() - Running task 'validate_config' with args {'desired_hostname': 'SW-DC1-AR', 'desired_vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-26 18:19:26,352 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'prechange'} on 1 hosts
+2026-02-26 18:19:42,000 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-26 18:19:42,987 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'desired_hostname': 'SW-DC1-BR'} on 1 hosts
+2026-02-26 18:19:44,748 -  nornir.core -     INFO -        run() - Running task 'save_config' with args {} on 1 hosts
+2026-02-26 18:19:47,377 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'postchange'} on 1 hosts
+2026-02-26 18:19:50,484 -  nornir.core -     INFO -        run() - Running task 'validate_config' with args {'desired_hostname': 'SW-DC1-BR', 'desired_vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-26 18:21:19,693 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'prechange'} on 1 hosts
+2026-02-26 18:21:24,824 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 100, 'name': 'Test'}, {'id': 200, 'name': 'Test2'}, {'id': 300, 'name': 'Test3'}]} on 1 hosts
+2026-02-26 18:21:27,435 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'desired_hostname': 'SW-DC1-AR'} on 1 hosts
+2026-02-26 18:21:29,108 -  nornir.core -     INFO -        run() - Running task 'save_config' with args {} on 1 hosts
+2026-02-26 18:21:31,741 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'postchange'} on 1 hosts
+2026-02-26 18:21:34,842 -  nornir.core -     INFO -        run() - Running task 'validate_config' with args {'desired_hostname': 'SW-DC1-AR', 'desired_vlans': [{'id': 100, 'name': 'Test'}, {'id': 200, 'name': 'Test2'}, {'id': 300, 'name': 'Test3'}]} on 1 hosts
+2026-02-26 18:21:37,650 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'prechange'} on 1 hosts
+2026-02-26 18:21:42,923 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 100, 'name': 'Test'}, {'id': 200, 'name': 'Test2'}, {'id': 300, 'name': 'Test3'}]} on 1 hosts
+2026-02-26 18:21:45,842 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'desired_hostname': 'SW-DC1-BR'} on 1 hosts
+2026-02-26 18:21:47,614 -  nornir.core -     INFO -        run() - Running task 'save_config' with args {} on 1 hosts
+2026-02-26 18:21:50,052 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'postchange'} on 1 hosts
+2026-02-26 18:21:53,166 -  nornir.core -     INFO -        run() - Running task 'validate_config' with args {'desired_hostname': 'SW-DC1-BR', 'desired_vlans': [{'id': 100, 'name': 'Test'}, {'id': 200, 'name': 'Test2'}, {'id': 300, 'name': 'Test3'}]} on 1 hosts
+2026-02-26 22:03:11,100 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'prechange'} on 1 hosts
+2026-02-26 22:03:27,222 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-26 22:03:28,272 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'desired_hostname': 'SW-DC1-AR'} on 1 hosts
+2026-02-26 22:03:29,903 -  nornir.core -     INFO -        run() - Running task 'save_config' with args {} on 1 hosts
+2026-02-26 22:03:32,238 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'postchange'} on 1 hosts
+2026-02-26 22:03:35,738 -  nornir.core -     INFO -        run() - Running task 'validate_config' with args {'desired_hostname': 'SW-DC1-AR', 'desired_vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-26 22:03:38,284 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'prechange'} on 1 hosts
+2026-02-26 22:03:54,158 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-26 22:03:55,164 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'desired_hostname': 'SW-DC1-BR'} on 1 hosts
+2026-02-26 22:03:56,999 -  nornir.core -     INFO -        run() - Running task 'save_config' with args {} on 1 hosts
+2026-02-26 22:03:59,252 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'postchange'} on 1 hosts
+2026-02-26 22:04:02,501 -  nornir.core -     INFO -        run() - Running task 'validate_config' with args {'desired_hostname': 'SW-DC1-BR', 'desired_vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-28 18:28:36,045 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'prechange'} on 1 hosts
+2026-02-28 18:28:51,527 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-28 18:28:52,518 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'desired_hostname': 'SW-DC1-AR'} on 1 hosts
+2026-02-28 18:28:54,076 -  nornir.core -     INFO -        run() - Running task 'save_config' with args {} on 1 hosts
+2026-02-28 18:28:55,782 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'postchange'} on 1 hosts
+2026-02-28 18:28:58,935 -  nornir.core -     INFO -        run() - Running task 'validate_config' with args {'desired_hostname': 'SW-DC1-AR', 'desired_vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-28 18:29:01,505 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'prechange'} on 1 hosts
+2026-02-28 18:29:16,523 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-BR': task 'get_hostname' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1146, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/usr/local/lib/python3.10/site-packages/paramiko/client.py", line 384, in connect
+    sock.connect(addr)
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/tasks/netmiko_send_command.py", line 26, in netmiko_send_command
+    net_connect = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 494, in get_connection
+    self.open_connection(
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/inventory.py", line 546, in open_connection
+    conn_obj.open(
+  File "/usr/local/lib/python3.10/site-packages/nornir_netmiko/connections/netmiko.py", line 59, in open
+    connection = ConnectHandler(**parameters)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/ssh_dispatcher.py", line 460, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 495, in __init__
+    self._open()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 500, in _open
+    self.establish_connection()
+  File "/usr/local/lib/python3.10/site-packages/netmiko/base_connection.py", line 1168, in establish_connection
+    raise NetmikoTimeoutException(msg)
+netmiko.exceptions.NetmikoTimeoutException: TCP connection to device failed.
+
+Common causes of this problem are:
+1. Incorrect hostname or IP address.
+2. Wrong TCP port.
+3. Intermediate firewall blocking access.
+
+Device settings: cisco_ios 192.168.1.246:22
+
+
+
+2026-02-28 18:29:16,524 - nornir.core.task -    ERROR -      start() - Host 'SW-DC1-BR': task 'backup_running_config' failed with traceback:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/app/part1/nornir_app/vlan_tasks.py", line 251, in backup_running_config
+    h = task.run(task=netmiko_send_command, command_string="show run | include ^hostname", name="get_hostname")
+  File "/usr/local/lib/python3.10/site-packages/nornir/core/task.py", line 174, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: get_hostname (failed)
+
+
+2026-02-28 18:29:16,525 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-28 18:32:35,803 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'prechange'} on 1 hosts
+2026-02-28 18:32:40,493 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-28 18:32:41,487 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'desired_hostname': 'SW-DC1-AR'} on 1 hosts
+2026-02-28 18:32:43,042 -  nornir.core -     INFO -        run() - Running task 'save_config' with args {} on 1 hosts
+2026-02-28 18:32:45,238 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'postchange'} on 1 hosts
+2026-02-28 18:32:48,410 -  nornir.core -     INFO -        run() - Running task 'validate_config' with args {'desired_hostname': 'SW-DC1-AR', 'desired_vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-28 18:32:50,959 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'prechange'} on 1 hosts
+2026-02-28 18:32:55,389 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-28 18:32:56,427 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'desired_hostname': 'SW-DC1-BR'} on 1 hosts
+2026-02-28 18:32:58,012 -  nornir.core -     INFO -        run() - Running task 'save_config' with args {} on 1 hosts
+2026-02-28 18:32:59,969 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'postchange'} on 1 hosts
+2026-02-28 18:33:03,126 -  nornir.core -     INFO -        run() - Running task 'validate_config' with args {'desired_hostname': 'SW-DC1-BR', 'desired_vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-28 19:36:54,571 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'prechange'} on 1 hosts
+2026-02-28 19:36:59,203 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-28 19:37:00,191 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'desired_hostname': 'SW-DC1-AR'} on 1 hosts
+2026-02-28 19:37:01,746 -  nornir.core -     INFO -        run() - Running task 'save_config' with args {} on 1 hosts
+2026-02-28 19:37:03,927 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'postchange'} on 1 hosts
+2026-02-28 19:37:07,183 -  nornir.core -     INFO -        run() - Running task 'validate_config' with args {'desired_hostname': 'SW-DC1-AR', 'desired_vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-28 19:37:09,778 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'prechange'} on 1 hosts
+2026-02-28 19:37:25,508 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-02-28 19:37:26,495 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'desired_hostname': 'SW-DC1-BR'} on 1 hosts
+2026-02-28 19:37:28,045 -  nornir.core -     INFO -        run() - Running task 'save_config' with args {} on 1 hosts
+2026-02-28 19:37:30,247 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'postchange'} on 1 hosts
+2026-02-28 19:37:33,580 -  nornir.core -     INFO -        run() - Running task 'validate_config' with args {'desired_hostname': 'SW-DC1-BR', 'desired_vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-03-01 22:49:20,988 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'prechange'} on 1 hosts
+2026-03-01 22:49:25,749 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-03-01 22:49:29,176 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'desired_hostname': 'SW-DC1-AR'} on 1 hosts
+2026-03-01 22:49:31,036 -  nornir.core -     INFO -        run() - Running task 'save_config' with args {} on 1 hosts
+2026-03-01 22:49:33,561 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'postchange'} on 1 hosts
+2026-03-01 22:49:36,704 -  nornir.core -     INFO -        run() - Running task 'validate_config' with args {'desired_hostname': 'SW-DC1-AR', 'desired_vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-03-01 22:49:39,225 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'prechange'} on 1 hosts
+2026-03-01 22:49:44,029 -  nornir.core -     INFO -        run() - Running task 'create_vlans' with args {'vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts
+2026-03-01 22:49:46,904 -  nornir.core -     INFO -        run() - Running task 'set_hostname' with args {'desired_hostname': 'SW-DC1-BR'} on 1 hosts
+2026-03-01 22:49:48,821 -  nornir.core -     INFO -        run() - Running task 'save_config' with args {} on 1 hosts
+2026-03-01 22:49:51,357 -  nornir.core -     INFO -        run() - Running task 'backup_running_config' with args {'backup_dir': 'backups', 'tag': 'postchange'} on 1 hosts
+2026-03-01 22:49:54,532 -  nornir.core -     INFO -        run() - Running task 'validate_config' with args {'desired_hostname': 'SW-DC1-BR', 'desired_vlans': [{'id': 10, 'name': 'VLAN_DATOS'}, {'id': 20, 'name': 'VLAN_VOZ'}, {'id': 50, 'name': 'VLAN_SEGURIDAD'}]} on 1 hosts

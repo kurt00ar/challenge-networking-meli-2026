@@ -1,0 +1,168 @@
+---
+# -----------------------------------------------------------------------------
+# Part2 | Paso 06 - POST Backup (PRO)
+# - Usa TS único generado en 00_pre_backup.yml (hostvars['localhost'].ts)
+# - Reutiliza bases globales (hostvars['localhost'].evidence_base/backups_base)
+# - Crea SIEMPRE el directorio post antes de escribir archivos
+# - Guarda evidencias PAN via XML API
+# - Guarda evidencias FGT via fortios monitor_fact
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# 0) Local: folders + PAN post evidence
+# -----------------------------------------------------------------------------
+- name: "Part2 | Paso 06 - POST | Local post folders + PAN evidence"
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    # Fuente de verdad: facts del 00_pre_backup.yml
+    ts: "{{ hostvars['localhost'].ts | default(lookup('pipe','date +%Y%m%d_%H%M%S'), true) }}"
+    evidence_base: "{{ hostvars['localhost'].evidence_base | default('/app/part2/evidence', true) }}"
+    backups_base: "{{ hostvars['localhost'].backups_base | default('/app/part2/backups', true) }}"
+
+    pan_host: "{{ lookup('env','PAN_HOST') | default('', true) }}"
+    pan_api_key: "{{ lookup('env','PAN_API_KEY') | default('', true) }}"
+    pan_https_port: "{{ lookup('env','PAN_HTTPS_PORT') | default('443', true) }}"
+
+    pan_backup_dir: "{{ backups_base }}/paloalto/{{ ts }}"
+    fgt_backup_dir: "{{ backups_base }}/fortigate/{{ ts }}"
+    post_evidence_dir: "{{ evidence_base }}/{{ ts }}/post"
+
+  tasks:
+    - name: "POST | Assert required env vars (PAN_HOST/PAN_API_KEY)"
+      ansible.builtin.assert:
+        that:
+          - pan_host | length > 0
+          - pan_api_key | length > 0
+        fail_msg: |
+          Faltan variables de entorno.
+          Requeridas:
+            PAN_HOST
+            PAN_API_KEY
+
+    - name: "POST | Assert TS + base paths are valid"
+      ansible.builtin.assert:
+        that:
+          - ts is match('^[0-9]{8}_[0-9]{6}$')
+          - evidence_base is match('^/.*')
+          - backups_base is match('^/.*')
+          - post_evidence_dir is match('^/.*')
+        fail_msg: |
+          Paths/TS inválidos.
+          ts={{ ts }}
+          evidence_base={{ evidence_base }}
+          backups_base={{ backups_base }}
+          post_evidence_dir={{ post_evidence_dir }}
+
+    - name: "POST | Create folders (backups + evidence)"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - "{{ pan_backup_dir }}"
+        - "{{ fgt_backup_dir }}"
+        - "{{ post_evidence_dir }}"
+
+    - name: "POST | Banner"
+      ansible.builtin.debug:
+        msg:
+          - "TS: {{ ts }}"
+          - "PAN backup dir: {{ pan_backup_dir }}"
+          - "FGT backup dir: {{ fgt_backup_dir }}"
+          - "POST evidence dir: {{ post_evidence_dir }}"
+
+    # -------------------- Palo Alto POST backup --------------------
+    - name: "POST | PAN | Download running-config.xml (full /config)"
+      ansible.builtin.uri:
+        url: "https://{{ pan_host }}:{{ pan_https_port }}/api/?type=export&category=configuration&key={{ pan_api_key }}"
+        method: GET
+        validate_certs: false
+        return_content: true
+      register: pan_running_cfg
+
+    - name: "POST | PAN | Save running-config.xml"
+      ansible.builtin.copy:
+        dest: "{{ pan_backup_dir }}/running-config_POST.xml"
+        content: "{{ pan_running_cfg.content }}"
+        mode: "0644"
+
+    # Evidence ops
+    - name: "POST | PAN | Evidence: show vpn ike-sa"
+      ansible.builtin.uri:
+        url: "https://{{ pan_host }}:{{ pan_https_port }}/api/?type=op&cmd={{ '<show><vpn><ike-sa></ike-sa></vpn></show>' | urlencode }}&key={{ pan_api_key }}"
+        method: GET
+        validate_certs: false
+        return_content: true
+      register: post_pan_ike
+
+    - name: "POST | PAN | Evidence: show vpn ipsec-sa"
+      ansible.builtin.uri:
+        url: "https://{{ pan_host }}:{{ pan_https_port }}/api/?type=op&cmd={{ '<show><vpn><ipsec-sa></ipsec-sa></vpn></show>' | urlencode }}&key={{ pan_api_key }}"
+        method: GET
+        validate_certs: false
+        return_content: true
+      register: post_pan_ipsec
+
+    - name: "POST | PAN | Evidence: show vpn tunnel"
+      ansible.builtin.uri:
+        url: "https://{{ pan_host }}:{{ pan_https_port }}/api/?type=op&cmd={{ '<show><vpn><tunnel></tunnel></vpn></show>' | urlencode }}&key={{ pan_api_key }}"
+        method: GET
+        validate_certs: false
+        return_content: true
+      register: post_pan_tunnel
+
+    - name: "POST | PAN | Evidence: show routing route"
+      ansible.builtin.uri:
+        url: "https://{{ pan_host }}:{{ pan_https_port }}/api/?type=op&cmd={{ '<show><routing><route></route></routing></show>' | urlencode }}&key={{ pan_api_key }}"
+        method: GET
+        validate_certs: false
+        return_content: true
+      register: post_pan_routes
+
+    - name: "POST | PAN | Save evidence files (guaranteed dir)"
+      ansible.builtin.copy:
+        dest: "{{ post_evidence_dir }}/{{ item.dest }}"
+        content: "{{ item.content }}"
+        mode: "0644"
+      loop:
+        - { dest: "post_pan_show_vpn_ike_sa.xml",     content: "{{ post_pan_ike.content }}" }
+        - { dest: "post_pan_show_vpn_ipsec_sa.xml",  content: "{{ post_pan_ipsec.content }}" }
+        - { dest: "post_pan_show_vpn_tunnel.xml",    content: "{{ post_pan_tunnel.content }}" }
+        - { dest: "post_pan_show_routing_route.xml", content: "{{ post_pan_routes.content }}" }
+
+    - name: "POST | Save post_evidence_dir as fact for other plays"
+      ansible.builtin.set_fact:
+        post_evidence_dir: "{{ post_evidence_dir }}"
+
+
+# -----------------------------------------------------------------------------
+# 1) FortiGate: correr en el host real (fgt) => persistent socket OK
+# -----------------------------------------------------------------------------
+- name: "Part2 | Paso 06 - POST | FortiGate evidence (post)"
+  hosts: fgt
+  gather_facts: false
+
+  tasks:
+    - name: "POST | FGT | system_status"
+      fortinet.fortios.fortios_monitor_fact:
+        vdom: "root"
+        selector: "system_status"
+      register: post_fgt_status
+
+    - name: "POST | FGT | vpn_ipsec monitor"
+      fortinet.fortios.fortios_monitor_fact:
+        vdom: "root"
+        selector: "vpn_ipsec"
+      register: post_fgt_vpn
+      failed_when: false
+
+    - name: "POST | FGT | Save evidence (json)"
+      ansible.builtin.copy:
+        dest: "{{ hostvars['localhost'].post_evidence_dir }}/{{ item.name }}"
+        content: "{{ item.content }}"
+        mode: "0644"
+      loop:
+        - { name: "post_fgt_system_status.json", content: "{{ post_fgt_status | to_nice_json }}" }
+        - { name: "post_fgt_vpn_ipsec.json",     content: "{{ post_fgt_vpn | to_nice_json }}" }

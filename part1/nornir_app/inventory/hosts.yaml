@@ -1,0 +1,13 @@
+SW-DC1-AR:
+  hostname: 192.168.1.241
+  platform: cisco_ios
+  username: admin
+  password: admin
+  port: 22
+
+SW-DC1-BR:
+  hostname: 192.168.1.246
+  platform: cisco_ios
+  username: admin
+  password: admin
+  port: 22

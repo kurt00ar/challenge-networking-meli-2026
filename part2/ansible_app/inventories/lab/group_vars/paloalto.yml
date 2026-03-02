@@ -1,0 +1,70 @@
+# inventories/lab/group_vars/paloalto.yml
+# -----------------------------------------------------------------------------
+# Palo Alto - Group Vars (Lab)
+# Backwards compatible: usa ENV si existe, si no usa inventory/hosts.yml
+# -----------------------------------------------------------------------------
+
+# Device entry (muy común en lab/PA-VM)
+pan_device_entry: "localhost.localdomain"
+
+# VSYS / Virtual Router (defaults estables)
+pan_vsys: "{{ lookup('env','PAN_VSYS') | default('vsys1', true) | trim }}"
+pan_virtual_router: "{{ lookup('env','PAN_VR') | default('default', true) | trim }}"
+
+# Host/IP del PA:
+# - Si está exportado PAN_HOST: lo toma
+# - Si no, cae en ansible_host
+pan_hostname: "{{ lookup('env','PAN_HOST') | default(ansible_host, true) | trim }}"
+
+# API Key:
+# - Si está exportado PAN_API_KEY: lo toma
+# - Si no, queda vacío (y los playbooks que lo necesitan deben assert)
+pan_api_key: "{{ lookup('env','PAN_API_KEY') | default('', true) | trim }}"
+
+# Puertos / interfaces (defaults del lab)
+pan_https_port: "{{ lookup('env','PAN_HTTPS_PORT') | default('443', true) | trim }}"
+pan_wan_interface: "{{ lookup('env','PAN_WAN_IF') | default('ethernet1/3', true) | trim }}"
+
+# Zonas (vienen de vpn.yml)
+pan_zone_trust: "{{ vpn_zone_lan | default('LAN', true) }}"
+pan_zone_untrust: "{{ vpn_zone_wan | default('WAN', true) }}"
+pan_zone_vpn: "{{ vpn_zone_vpn | default('VPN', true) }}"
+
+# Tunnel interface (viene de vpn.yml)
+pan_tunnel_if: "{{ vpn_pan_tunnel_if | default('tunnel.10', true) }}"
+
+# Nombres de objetos (consistentes)
+pan_ike_gw: "{{ vpn_name }}-IKEGW"
+pan_ipsec_tunnel: "{{ vpn_name }}-IPSEC"
+pan_crypto_ike: "{{ vpn_name }}-IKE-CRYPTO"
+pan_crypto_ipsec: "{{ vpn_name }}-IPSEC-CRYPTO"
+pan_mgmt_profile_ping: "Allow-Ping"
+
+# IKE / Phase1 (FGT lab constraint: DES)
+pan_ike_version: "{{ vpn_ike_version | default('ikev2', true) }}"
+pan_ike_encryption:
+  - "des"
+pan_ike_authentication:
+  - "sha256"
+pan_ike_dh_group:
+  - "group{{ vpn_p1_dh_group | default(2) | int }}"
+pan_ike_lifetime: "{{ vpn_p1_lifetime | default(28800) | int }}"
+
+# IPsec / Phase2 (DES + SHA256 + PFS group2)
+pan_ipsec_esp_encryption:
+  - "des"
+pan_ipsec_esp_authentication:
+  - "sha256"
+pan_ipsec_pfs: "group{{ vpn_p2_pfs_group | default(2) | int }}"
+pan_ipsec_lifetime: "{{ vpn_p2_lifetime | default(3600) | int }}"
+
+# Tunnel IP (PAN usa /30)
+pan_tunnel_ip_cidr: "{{ vpn_tunnel_pan_ip }}/30"
+
+# Proxy-IDs (PAN local <-> FGT remote)
+pan_proxyid_local_subnets: "{{ vpn_pan_inside_subnets | default([]) }}"
+pan_proxyid_remote_subnets: "{{ vpn_fgt_inside_subnets | default([]) }}"
+
+# Aliases legacy por compatibilidad si algún playbook viejo los usa:
+PAN_HOST: "{{ pan_hostname }}"
+PAN_API_KEY: "{{ pan_api_key }}"

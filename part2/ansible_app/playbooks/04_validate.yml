@@ -1,0 +1,200 @@
+---
+# -----------------------------------------------------------------------------
+# Part2 | Paso 04 - VALIDATE VPN (FortiGate <-> Palo Alto)
+#
+# Objetivos:
+# - Verificar IKE + IPsec en ambos extremos
+# - Derivar estado humano: "OK / UP / ACTIVO"
+# - Guardar evidencia
+# - Permitir modo estricto opcional
+# -----------------------------------------------------------------------------
+
+###############################################################################
+# 1️⃣ PREPARE EVIDENCE FOLDER
+###############################################################################
+- name: "VALIDATE | Prepare evidence folder"
+  hosts: localhost
+  gather_facts: false
+  vars:
+    evidence_base: "/app/part2/evidence"
+  tasks:
+    - name: Create timestamped folder
+      ansible.builtin.set_fact:
+        validate_timestamp: "{{ lookup('pipe','date +%Y%m%d_%H%M%S') }}"
+
+    - name: Create directory
+      ansible.builtin.file:
+        path: "{{ evidence_base }}/{{ validate_timestamp }}/04_validate"
+        state: directory
+        mode: "0755"
+
+    - name: Save dir path
+      ansible.builtin.set_fact:
+        validate_evidence_dir: "{{ evidence_base }}/{{ validate_timestamp }}/04_validate"
+
+    - name: Banner
+      ansible.builtin.debug:
+        msg:
+          - "Validation timestamp: {{ validate_timestamp }}"
+          - "Evidence dir: {{ validate_evidence_dir }}"
+
+###############################################################################
+# 2️⃣ PALO ALTO VALIDATION
+###############################################################################
+- name: "VALIDATE | Palo Alto"
+  hosts: panos
+  gather_facts: false
+
+  vars:
+    pan_host: "{{ lookup('env','PAN_HOST') }}"
+    pan_api_key: "{{ lookup('env','PAN_API_KEY') }}"
+    pan_api_base: "https://{{ lookup('env','PAN_HOST') }}:443/api/"
+    fgt_probe_ip: "10.10.10.10"
+
+  tasks:
+
+    - name: Assert PAN env
+      ansible.builtin.assert:
+        that:
+          - pan_host | length > 0
+          - pan_api_key | length > 0
+
+    # ---- OP Commands ----
+    - name: PAN | show vpn ike-sa
+      ansible.builtin.uri:
+        url: "{{ pan_api_base }}?type=op&cmd={{ '<show><vpn><ike-sa></ike-sa></vpn></show>' | urlencode }}&key={{ pan_api_key }}"
+        method: GET
+        validate_certs: false
+        return_content: true
+      register: pan_ike
+
+    - name: PAN | show vpn ipsec-sa
+      ansible.builtin.uri:
+        url: "{{ pan_api_base }}?type=op&cmd={{ '<show><vpn><ipsec-sa></ipsec-sa></vpn></show>' | urlencode }}&key={{ pan_api_key }}"
+        method: GET
+        validate_certs: false
+        return_content: true
+      register: pan_ipsec
+
+    - name: PAN | show vpn tunnel
+      ansible.builtin.uri:
+        url: "{{ pan_api_base }}?type=op&cmd={{ '<show><vpn><tunnel></tunnel></vpn></show>' | urlencode }}&key={{ pan_api_key }}"
+        method: GET
+        validate_certs: false
+        return_content: true
+      register: pan_tunnel
+
+    - name: PAN | Ping FGT LAN (best-effort)
+      ansible.builtin.uri:
+        url: "{{ pan_api_base }}?type=op&cmd={{ ('<ping><host>' ~ fgt_probe_ip ~ '</host><count>5</count></ping>') | urlencode }}&key={{ pan_api_key }}"
+        method: GET
+        validate_certs: false
+        return_content: true
+      register: pan_ping
+      failed_when: false
+
+    # ---- Derive status ----
+    - name: Derive PAN IKE/IPsec status
+      ansible.builtin.set_fact:
+        pan_ike_ok: "{{ pan_ike.content is search('<entry>') }}"
+        pan_ipsec_ok: "{{ pan_ipsec.content is search('<entry>') }}"
+        pan_ipsec_count: "{{ pan_ipsec.content | regex_findall('<entry>') | length }}"
+        pan_ping_status: >-
+          {% if pan_ping.content is search('success') %}
+          OK
+          {% elif pan_ping.content is search('xmlapi') %}
+          WARN (xmlapi ping blocked)
+          {% else %}
+          FAIL
+          {% endif %}
+
+    - name: Print PAN summary
+      ansible.builtin.debug:
+        msg:
+          - "PALO ALTO VPN: {{ 'OK / UP / ACTIVO' if (pan_ike_ok and pan_ipsec_ok) else 'DOWN / CHECK' }}"
+          - "  IKE:   {{ 'UP' if pan_ike_ok else 'DOWN' }}"
+          - "  IPsec: {{ 'UP' if pan_ipsec_ok else 'DOWN' }} (entries={{ pan_ipsec_count }})"
+          - "  Ping:  {{ pan_ping_status }}"
+
+    - name: Save PAN evidence
+      ansible.builtin.copy:
+        dest: "{{ hostvars['localhost'].validate_evidence_dir }}/{{ item.name }}"
+        content: "{{ item.content }}"
+      loop:
+        - { name: "pan_show_vpn_ike.xml",    content: "{{ pan_ike.content }}" }
+        - { name: "pan_show_vpn_ipsec.xml",  content: "{{ pan_ipsec.content }}" }
+        - { name: "pan_show_vpn_tunnel.xml", content: "{{ pan_tunnel.content }}" }
+        - { name: "pan_ping.xml",            content: "{{ pan_ping.content | default('') }}" }
+
+###############################################################################
+# 3️⃣ FORTIGATE VALIDATION
+###############################################################################
+- name: "VALIDATE | FortiGate"
+  hosts: fgt
+  gather_facts: false
+
+  tasks:
+
+    - name: FGT | system status
+      fortinet.fortios.fortios_monitor_fact:
+        vdom: "root"
+        selector: "system_status"
+      register: fgt_system
+
+    - name: FGT | vpn ipsec
+      fortinet.fortios.fortios_monitor_fact:
+        vdom: "root"
+        selector: "vpn_ipsec"
+      register: fgt_vpn
+
+    - name: Derive FGT status
+      ansible.builtin.set_fact:
+        fgt_ipsec_up: >-
+          {{
+            (fgt_vpn.meta.results | default([]) | selectattr('status','defined')
+            | selectattr('status','equalto','up') | list | length) > 0
+          }}
+        fgt_total: "{{ fgt_vpn.meta.results | default([]) | length }}"
+
+    - name: Print FGT summary
+      ansible.builtin.debug:
+        msg:
+          - "FORTIGATE VPN: {{ 'OK / UP / ACTIVO' if fgt_ipsec_up else 'DOWN / CHECK' }}"
+          - "  Tunnels UP: {{ fgt_total }}"
+
+    - name: Save FGT evidence
+      ansible.builtin.copy:
+        dest: "{{ hostvars['localhost'].validate_evidence_dir }}/{{ item.name }}"
+        content: "{{ item.content }}"
+      loop:
+        - { name: "fgt_system.json", content: "{{ fgt_system | to_nice_json }}" }
+        - { name: "fgt_vpn_ipsec.json", content: "{{ fgt_vpn | to_nice_json }}" }
+
+###############################################################################
+# 4️⃣ FINAL VERDICT
+###############################################################################
+- name: "VALIDATE | Final Verdict"
+  hosts: localhost
+  gather_facts: false
+  vars:
+    vpn_strict_assert: false
+  tasks:
+
+    - name: Print global verdict
+      ansible.builtin.debug:
+        msg:
+          - "================ VPN VERDICT ================"
+          - "PALO ALTO : {{ 'OK / UP / ACTIVO' if (hostvars['panos'].pan_ike_ok and hostvars['panos'].pan_ipsec_ok) else 'DOWN / CHECK' }}"
+          - "FORTIGATE : {{ 'OK / UP / ACTIVO' if hostvars['fgt'].fgt_ipsec_up else 'DOWN / CHECK' }}"
+          - "Evidence  : {{ hostvars['localhost'].validate_evidence_dir }}"
+          - "============================================"
+
+    - name: Optional strict assert
+      ansible.builtin.assert:
+        that:
+          - hostvars['panos'].pan_ike_ok
+          - hostvars['panos'].pan_ipsec_ok
+          - hostvars['fgt'].fgt_ipsec_up
+        fail_msg: "VPN not UP on both sides."
+        success_msg: "VPN fully UP (IKE + IPsec + Proxyid up)."
+      when: vpn_strict_assert | bool

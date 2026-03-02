@@ -1,0 +1,74 @@
+---
+# playbooks/run_all.yml
+# -----------------------------------------------------------------------------
+# Part2 | Run All (Orchestrator)
+#
+# Pipeline:
+#   00) PRE backup      (Palo Alto + FortiGate evidence/backup)
+#   01) FortiGate IPsec (build/merge)
+#   02) Palo Alto IPsec (build/merge - no commit here)
+#   03) Palo Alto Net   (VR + routes + policies + COMMIT)
+#   04) Validate        (status summary + evidence)
+#   05) Debug           (extra dumps)
+#   06) POST backup     (final state backups/evidence)
+#
+# Why import_playbook?
+# - Keeps each stage modular, reusable, and reviewable
+# - Preserves deterministic ordering
+# - Lets you run partial pipeline via tags:
+#     ansible-playbook playbooks/run_all.yml --tags pre
+#     ansible-playbook playbooks/run_all.yml --tags build
+#     ansible-playbook playbooks/run_all.yml --tags commit
+#     ansible-playbook playbooks/run_all.yml --tags validate
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# 00) PRE backup
+# - Generates single ts and creates folder tree
+# - PAN: running-config + show system info evidence
+# - FGT: system_status + vpn_ipsec evidence
+# -----------------------------------------------------------------------------
+- import_playbook: 00_pre_backup.yml
+  tags: ["pre", "backup"]
+
+# -----------------------------------------------------------------------------
+# 01) FortiGate IPsec
+# - Phase1/Phase2 + tunnel iface + route + policies (merge/no deletes)
+# -----------------------------------------------------------------------------
+- import_playbook: 01_fortigate_ipsec.yml
+  tags: ["fgt", "build"]
+
+# -----------------------------------------------------------------------------
+# 02) Palo Alto IPsec
+# - mgmt-profile + tunnel.X + zone/vr/vsys import + ike/ipsec profiles + gateway + tunnel (no commit here)
+# -----------------------------------------------------------------------------
+- import_playbook: 02_paloalto_ipsec.yml
+  tags: ["pan", "build"]
+
+# -----------------------------------------------------------------------------
+# 03) Palo Alto Network + Commit
+# - routes + policies + commit (single commit stage)
+# -----------------------------------------------------------------------------
+- import_playbook: 03_paloalto_network.yml
+  tags: ["pan", "network", "commit"]
+
+# -----------------------------------------------------------------------------
+# 04) Validate VPN (pro checks)
+# - operational state summary + evidence capture
+# -----------------------------------------------------------------------------
+- import_playbook: 04_validate.yml
+  tags: ["validate", "status"]
+
+# -----------------------------------------------------------------------------
+# 05) Debug / Evidence extras
+# - optional extra op commands, routing dumps, counters, etc.
+# -----------------------------------------------------------------------------
+- import_playbook: 05_debug.yml
+  tags: ["debug"]
+
+# -----------------------------------------------------------------------------
+# 06) POST backup
+# - capture final state after changes
+# -----------------------------------------------------------------------------
+- import_playbook: 06_post_backup.yml
+  tags: ["post", "backup"]

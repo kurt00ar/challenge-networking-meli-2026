@@ -1,0 +1,22 @@
+{
+    "changed": false,
+    "failed": false,
+    "meta": {
+        "action": "",
+        "build": 632,
+        "http_method": "GET",
+        "name": "status",
+        "path": "system",
+        "results": {
+            "hostname": "FW-GATE-AR",
+            "log_disk_status": "available",
+            "model": "FFWKVM",
+            "model_name": "FortiFirewall",
+            "model_number": "VM64-KVM"
+        },
+        "serial": "FFVMEVM3XNGHLRF0",
+        "status": "success",
+        "vdom": "root",
+        "version": "v7.0.15"
+    }
+}

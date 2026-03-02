@@ -1,0 +1,36 @@
+{
+  "overall_ok": true,
+  "inputs": {
+    "switch1_hostname": "SW-DC1-AR",
+    "switch2_hostname": "SW-DC1-BR",
+    "vlans": [
+      {
+        "id": 10,
+        "name": "VLAN_DATOS"
+      },
+      {
+        "id": 20,
+        "name": "VLAN_VOZ"
+      },
+      {
+        "id": 80,
+        "name": "VLAN_TEST"
+      }
+    ]
+  },
+  "results": {
+    "SW-DC1-AR": {
+      "ok": true,
+      "details": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW-DC1-AR(config)#vlan 10\nSW-DC1-AR(config-vlan)#name VLAN_DATOS\nSW-DC1-AR(config-vlan)#exit\nSW-DC1-AR(config)#vlan 20\nSW-DC1-AR(config-vlan)#name VLAN_VOZ\nSW-DC1-AR(config-vlan)#exit\nSW-DC1-AR(config)#vlan 80\nSW-DC1-AR(config-vlan)#name VLAN_TEST\nSW-DC1-AR(config-vlan)#exit\nSW-DC1-AR(config)#end\nSW-DC1-AR#\nconfigure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW-DC1-AR(config)#hostname SW-DC1-AR\nSW-DC1-AR(config)#end\nSW-DC1-AR#\n\n--- show vlan brief ---\n\n\nVLAN Name                             Status    Ports\n---- -------------------------------- --------- -------------------------------\n1    default                          active    Gi0/0, Gi0/1, Gi0/2, Gi0/3, Gi1/0, Gi1/1, Gi1/2, Gi1/3, Gi2/0, Gi2/1, Gi2/2, Gi2/3, Gi3/0, Gi3/1, Gi3/2, Gi3/3\n10   VLAN_DATOS                       active    \n20   VLAN_VOZ                         active    \n50   VLAN_SEGURIDAD                   active    \n80   VLAN_TEST                        active    \n1002 fddi-default                     act/unsup \n1003 token-ring-default               act/unsup \n1004 fddinet-default                  act/unsup \n1005 trnet-default                    act/unsup ",
+      "failed": false,
+      "exception": null
+    },
+    "SW-DC1-BR": {
+      "ok": true,
+      "details": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW-DC1-BR(config)#vlan 10\nSW-DC1-BR(config-vlan)#name VLAN_DATOS\nSW-DC1-BR(config-vlan)#exit\nSW-DC1-BR(config)#vlan 20\nSW-DC1-BR(config-vlan)#name VLAN_VOZ\nSW-DC1-BR(config-vlan)#exit\nSW-DC1-BR(config)#vlan 80\nSW-DC1-BR(config-vlan)#name VLAN_TEST\nSW-DC1-BR(config-vlan)#exit\nSW-DC1-BR(config)#end\nSW-DC1-BR#\nconfigure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW-DC1-BR(config)#hostname SW-DC1-BR\nSW-DC1-BR(config)#end\nSW-DC1-BR#\n\n--- show vlan brief ---\n\n\nVLAN Name                             Status    Ports\n---- -------------------------------- --------- -------------------------------\n1    default                          active    Gi0/0, Gi0/1, Gi0/2, Gi0/3, Gi1/0, Gi1/1, Gi1/2, Gi1/3, Gi2/0, Gi2/1, Gi2/2, Gi2/3, Gi3/0, Gi3/1, Gi3/2, Gi3/3\n10   VLAN_DATOS                       active    \n20   VLAN_VOZ                         active    \n50   VLAN_SEGURIDAD                   active    \n80   VLAN_TEST                        active    \n1002 fddi-default                     act/unsup \n1003 token-ring-default               act/unsup \n1004 fddinet-default                  act/unsup \n1005 trnet-default                    act/unsup ",
+      "failed": false,
+      "exception": null
+    }
+  },
+  "timestamp": "2026-02-25T02:17:51.884175"
+}

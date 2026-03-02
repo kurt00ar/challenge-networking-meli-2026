@@ -1,0 +1,20 @@
+<response status="success"><result>
+  <ntun>1</ntun>
+  <entries>
+    <entry>
+      <kb>Unlimited</kb>
+      <life>3600</life>
+      <enc>DES</enc>
+      <remote>201.254.16.2          </remote>
+      <name>VPN_MELI_CHALLENGE-IPSEC:px01</name>
+      <proto>ESP</proto>
+      <i_spi>2789721700</i_spi>
+      <gwid>1</gwid>
+      <o_spi>2903891497</o_spi>
+      <remain>3591</remain>
+      <tid>1</tid>
+      <hash>SHA256</hash>
+      <gateway>VPN_MELI_CHALLENGE-IKEGW</gateway>
+    </entry>
+  </entries>
+</result></response>

@@ -1,0 +1,53 @@
+{
+    "action": "",
+    "build": 632,
+    "http_method": "GET",
+    "name": "ipsec",
+    "path": "vpn",
+    "results": [
+        {
+            "comments": "",
+            "connection_count": 1,
+            "creation_time": 12850,
+            "incoming_bytes": 2157540,
+            "name": "VPN_MELI_CHAL",
+            "outgoing_bytes": 2157120,
+            "proxyid": [
+                {
+                    "expire": 343,
+                    "incoming_bytes": 992208,
+                    "outgoing_bytes": 1322944,
+                    "p2name": "VPN_MELI_CHAL_P2",
+                    "p2serial": 2,
+                    "proxy_dst": [
+                        {
+                            "port": 0,
+                            "protocol": 0,
+                            "protocol_name": "",
+                            "subnet": "10.20.10.0/255.255.255.0"
+                        }
+                    ],
+                    "proxy_src": [
+                        {
+                            "port": 0,
+                            "protocol": 0,
+                            "protocol_name": "",
+                            "subnet": "10.10.10.0/255.255.255.0"
+                        }
+                    ],
+                    "status": "up"
+                }
+            ],
+            "rgwy": "200.169.116.2",
+            "tun_id": "200.169.116.2",
+            "tun_id6": "::200.169.116.2",
+            "type": "automatic",
+            "username": "200.169.116.2",
+            "wizard-type": "custom"
+        }
+    ],
+    "serial": "FFVMEVM3XNGHLRF0",
+    "status": "success",
+    "vdom": "root",
+    "version": "v7.0.15"
+}

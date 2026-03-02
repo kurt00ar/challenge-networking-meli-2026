@@ -1,0 +1,150 @@
+---
+# =============================================================================
+#  PART2 – 03) PALO ALTO NETWORK (VR ROUTES + 2 POLICIES + COMMIT)
+#
+#  - Static routes via tunnel.10 (action=set append entries)
+#  - 2 security policies
+#  - Commit
+#
+#  IMPORTANT:
+#   - URL must be ONE LINE (no YAML multiline) to avoid hidden spaces/newlines.
+# =============================================================================
+
+- name: "Part2 | Paso 3 - Palo Alto | Network (VR Routes + Policies + Commit)"
+  hosts: panos
+  gather_facts: false
+  connection: local
+
+  vars:
+    # ENV
+    pan_host: "{{ (lookup('env','PAN_HOST') | default('', true)) | trim }}"
+    pan_api_key: "{{ (lookup('env','PAN_API_KEY') | default('', true)) | trim }}"
+    pan_https_port: "{{ (lookup('env','PAN_HTTPS_PORT') | default('443', true)) | trim }}"
+    pan_api_base: "https://{{ pan_host }}:{{ pan_https_port }}/api/"
+
+    # Defaults (autodetect si querés, pero acá asumimos ya ok por Paso 2)
+    pan_device_entry: "{{ hostvars[inventory_hostname].pan_device_entry | default('localhost.localdomain') }}"
+    pan_vsys: "{{ hostvars[inventory_hostname].pan_vsys | default('vsys1') }}"
+    pan_vr: "{{ hostvars[inventory_hostname].pan_vr | default('default') }}"
+
+    pan_zone_vpn: "{{ hostvars[inventory_hostname].vpn_zone_vpn | default('VPN') }}"
+    pan_zone_lan: "{{ hostvars[inventory_hostname].lan_zone | default('LAN') }}"
+
+    # Tunnel
+    pan_tunnel_if: "{{ (hostvars[inventory_hostname].pan_tunnel_if | default('tunnel.10')) | trim }}"
+    pan_tunnel_peer_ip: "{{ hostvars[inventory_hostname].vpn_tunnel_fgt_ip | default('169.255.1.1') }}"
+
+    # LANs FortiGate detrás del túnel
+    fgt_remote_subnets: "{{ hostvars[inventory_hostname].vpn_fgt_inside_subnets | default(['10.10.10.0/24']) }}"
+
+    # Evidence dir (usa ts del run_all si existe)
+    ts: "{{ hostvars['localhost'].ts | default(lookup('pipe','date +%Y%m%d_%H%M%S')) }}"
+    evidence_base: "{{ hostvars['localhost'].evidence_base | default('/app/part2/evidence') }}"
+    evidence_dir: "{{ evidence_base }}/{{ ts }}/03_paloalto_network"
+
+    # XPATHs (con comillas correctas)
+    pan_xpath_routes: "/config/devices/entry[@name='{{ pan_device_entry }}']/network/virtual-router/entry[@name='{{ pan_vr }}']/routing-table/ip/static-route"
+    pan_xpath_rules: "/config/devices/entry[@name='{{ pan_device_entry }}']/vsys/entry[@name='{{ pan_vsys }}']/rulebase/security/rules"
+
+  tasks:
+    - name: "ASSERT | PAN_HOST / PAN_API_KEY"
+      ansible.builtin.assert:
+        that:
+          - pan_host | length > 0
+          - pan_api_key | length > 20
+        fail_msg: "Missing PAN_HOST and/or PAN_API_KEY env vars"
+
+    - name: "LOCAL | Create evidence dir"
+      ansible.builtin.file:
+        path: "{{ evidence_dir }}"
+        state: directory
+        mode: "0755"
+      delegate_to: localhost
+
+    # -----------------------------------------------------------------------
+    # 1) STATIC ROUTES (append entries)
+    # -----------------------------------------------------------------------
+    - name: "BUILD | Static route entries XML (single-line)"
+      ansible.builtin.set_fact:
+        pan_route_entries_xml: >-
+          {%- for cidr in fgt_remote_subnets -%}
+          <entry name="to_{{ cidr | regex_replace('[^0-9A-Za-z]+','_') }}"><destination>{{ cidr }}</destination><interface>{{ pan_tunnel_if }}</interface><nexthop><ip-address>{{ pan_tunnel_peer_ip }}</ip-address></nexthop><metric>10</metric></entry>
+          {%- endfor -%}
+
+    - name: "API | Push static routes to VR (SAFE - one-line url)"
+      ansible.builtin.uri:
+        url: "{{ pan_api_base }}?type=config&action=set&key={{ pan_api_key | urlencode }}&xpath={{ pan_xpath_routes | urlencode }}&element={{ pan_route_entries_xml | urlencode }}"
+        method: GET
+        validate_certs: false
+        return_content: true
+      register: pan_routes_set
+
+    - name: "EVIDENCE | Save routes_push result"
+      ansible.builtin.copy:
+        dest: "{{ evidence_dir }}/pan_routes_set.xml"
+        content: "{{ pan_routes_set.content | default('') }}"
+        mode: "0644"
+      delegate_to: localhost
+
+    # -----------------------------------------------------------------------
+    # 2) POLICIES (2 rules)
+    # -----------------------------------------------------------------------
+    - name: "BUILD | Policy XML (LAN -> VPN)"
+      ansible.builtin.set_fact:
+        pan_pol_lan_to_vpn_xml: >-
+          <entry name="ALLOW_LAN_TO_VPN"><from><member>{{ pan_zone_lan }}</member></from><to><member>{{ pan_zone_vpn }}</member></to><source><member>any</member></source><destination><member>any</member></destination><application><member>any</member></application><service><member>application-default</member></service><action>allow</action><log-start>yes</log-start><log-end>yes</log-end></entry>
+
+    - name: "BUILD | Policy XML (VPN -> LAN)"
+      ansible.builtin.set_fact:
+        pan_pol_vpn_to_lan_xml: >-
+          <entry name="ALLOW_VPN_TO_LAN"><from><member>{{ pan_zone_vpn }}</member></from><to><member>{{ pan_zone_lan }}</member></to><source><member>any</member></source><destination><member>any</member></destination><application><member>any</member></application><service><member>application-default</member></service><action>allow</action><log-start>yes</log-start><log-end>yes</log-end></entry>
+
+    - name: "API | Policy LAN -> VPN (ALLOW_LAN_TO_VPN)"
+      ansible.builtin.uri:
+        url: "{{ pan_api_base }}?type=config&action=set&key={{ pan_api_key | urlencode }}&xpath={{ pan_xpath_rules | urlencode }}&element={{ pan_pol_lan_to_vpn_xml | urlencode }}"
+        method: GET
+        validate_certs: false
+        return_content: true
+      register: pan_pol_1
+
+    - name: "API | Policy VPN -> LAN (ALLOW_VPN_TO_LAN)"
+      ansible.builtin.uri:
+        url: "{{ pan_api_base }}?type=config&action=set&key={{ pan_api_key | urlencode }}&xpath={{ pan_xpath_rules | urlencode }}&element={{ pan_pol_vpn_to_lan_xml | urlencode }}"
+        method: GET
+        validate_certs: false
+        return_content: true
+      register: pan_pol_2
+
+    - name: "EVIDENCE | Save policy_push result"
+      ansible.builtin.copy:
+        dest: "{{ evidence_dir }}/pan_policies_set.xml"
+        content: |
+          <!-- LAN->VPN -->
+          {{ pan_pol_1.content | default('') }}
+
+          <!-- VPN->LAN -->
+          {{ pan_pol_2.content | default('') }}
+        mode: "0644"
+      delegate_to: localhost
+
+    # -----------------------------------------------------------------------
+    # 3) COMMIT
+    # -----------------------------------------------------------------------
+    - name: "PAN | Commit candidate config"
+      ansible.builtin.uri:
+        url: "{{ pan_api_base }}?type=commit&cmd={{ '<commit></commit>' | urlencode }}&key={{ pan_api_key | urlencode }}"
+        method: GET
+        validate_certs: false
+        return_content: true
+      register: pan_commit
+
+    - name: "EVIDENCE | Save commit result"
+      ansible.builtin.copy:
+        dest: "{{ evidence_dir }}/pan_commit.xml"
+        content: "{{ pan_commit.content | default('') }}"
+        mode: "0644"
+      delegate_to: localhost
+
+    - name: "DEBUG | Commit response (raw xml)"
+      ansible.builtin.debug:
+        var: pan_commit.content

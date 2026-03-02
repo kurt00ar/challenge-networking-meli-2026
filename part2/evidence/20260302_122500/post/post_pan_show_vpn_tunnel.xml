@@ -1,0 +1,25 @@
+<response status="success"><result>
+  <ntun>1</ntun>
+  <entries>
+    <entry>
+      <gw>VPN_MELI_CHALLENGE-IKEGW</gw>
+      <kb>0</kb>
+      <life>3600</life>
+      <TSr_port>0</TSr_port>
+      <hash>SHA256</hash>
+      <TSi_prefix>24</TSi_prefix>
+      <TSi_ip>10.20.10.0</TSi_ip>
+      <proto>ESP</proto>
+      <TSr_proto>0</TSr_proto>
+      <enc>DES</enc>
+      <TSr_prefix>24</TSr_prefix>
+      <mode>tunl</mode>
+      <TSi_port>0</TSi_port>
+      <TSr_ip>10.10.10.0</TSr_ip>
+      <dh>DH2</dh>
+      <id>1</id>
+      <TSi_proto>0</TSi_proto>
+      <name>VPN_MELI_CHALLENGE-IPSEC:px01</name>
+    </entry>
+  </entries>
+</result></response>

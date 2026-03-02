@@ -1,0 +1,137 @@
+---
+# playbooks/00_test_pan.yml
+# -----------------------------------------------------------------------------
+# Palo Alto | Connectivity & API Validation (robust)
+#
+# Goals:
+# - Verify PAN_HOST + PAN_API_KEY are present (env)
+# - Run "show system info" using panos_op (stable)
+# - Save raw output for troubleshooting WITHOUT opening PAN GUI
+# - Best-effort parsing of hostname / sw-version / mgmt-ip
+#
+# Debug mode:
+#   PAN_DEBUG=true make test
+# Evidence:
+#   /app/part2/evidence/_pan_test/pan_show_system_info_raw.json
+#   /app/part2/evidence/_pan_test/pan_show_system_info_blob.txt
+# -----------------------------------------------------------------------------
+
+- name: "Palo Alto | Connectivity & API Validation (robust)"
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    pan_host: "{{ lookup('env','PAN_HOST') | default('', true) }}"
+    pan_api_key: "{{ lookup('env','PAN_API_KEY') | default('', true) }}"
+    pan_https_port: "{{ lookup('env','PAN_HTTPS_PORT') | default('443', true) }}"
+    pan_debug: "{{ (lookup('env','PAN_DEBUG') | default('false', true) | lower) == 'true' }}"
+    evidence_dir: "/app/part2/evidence/_pan_test"
+
+  tasks:
+    - name: Assert required environment variables
+      ansible.builtin.assert:
+        that:
+          - pan_host | length > 0
+          - pan_api_key | length > 0
+        fail_msg: |
+          Missing required environment variables.
+          Please ensure:
+            export PAN_HOST=...
+            export PAN_API_KEY=...
+          If using .env → run: make restart
+        success_msg: "All assertions passed"
+
+    - name: Ensure evidence folder exists
+      ansible.builtin.file:
+        path: "{{ evidence_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Get system info (Palo Alto)
+      paloaltonetworks.panos.panos_op:
+        ip_address: "{{ pan_host }}"
+        api_key: "{{ pan_api_key }}"
+        port: "{{ pan_https_port | int }}"
+        cmd: "show system info"
+      register: pan_sys
+
+    - name: Save raw response (json)
+      ansible.builtin.copy:
+        dest: "{{ evidence_dir }}/pan_show_system_info_raw.json"
+        content: "{{ pan_sys | to_nice_json }}"
+        mode: "0644"
+
+    # Robust "blob" builder to survive return format variations
+    - name: Build parsing blob (robust)
+      ansible.builtin.set_fact:
+        pan_blob: >-
+          {{
+            [
+              (pan_sys.stdout | default('')),
+              ((pan_sys.stdout_lines | default([])) | join('\n')),
+              (pan_sys | to_nice_json)
+            ] | map('string') | list | join('\n')
+          }}
+
+    - name: Save normalized blob (text) for inspection
+      ansible.builtin.copy:
+        dest: "{{ evidence_dir }}/pan_show_system_info_blob.txt"
+        content: "{{ pan_blob }}"
+        mode: "0644"
+
+    # Best-effort regex extraction (avoid hard failures)
+    - name: Parse hostname (best-effort)
+      ansible.builtin.set_fact:
+        pan_hostname: >-
+          {{
+            (
+              pan_blob | regex_search('hostname\\s*:\\s*([^\\s]+)', '\\1')
+            ) | default('', true)
+          }}
+
+    - name: Parse sw-version (best-effort)
+      ansible.builtin.set_fact:
+        pan_sw_version: >-
+          {{
+            (
+              pan_blob | regex_search('sw-version\\s*:\\s*([^\\s]+)', '\\1')
+            ) | default('', true)
+          }}
+
+    - name: Parse mgmt ip-address (best-effort)
+      ansible.builtin.set_fact:
+        pan_mgmt_ip: >-
+          {{
+            (
+              pan_blob | regex_search('ip-address\\s*:\\s*([^\\s]+)', '\\1')
+            ) | default('', true)
+          }}
+
+    - name: Decide parsing status
+      ansible.builtin.set_fact:
+        pan_parse_status: "{{ 'OK' if ((pan_hostname|length>0) or (pan_sw_version|length>0)) else 'WARN' }}"
+
+    - name: Show summary (always)
+      ansible.builtin.debug:
+        msg:
+          - "Palo Alto reachable ✅"
+          - "Host: {{ pan_host }}:{{ pan_https_port }}"
+          - "Parsed hostname: {{ pan_hostname | default('N/A') }}"
+          - "Parsed sw-version: {{ pan_sw_version | default('N/A') }}"
+          - "Parsed mgmt-ip: {{ pan_mgmt_ip | default('N/A') }}"
+          - "Parse status: {{ pan_parse_status }}"
+          - "Evidence raw: {{ evidence_dir }}/pan_show_system_info_raw.json"
+          - "Evidence blob: {{ evidence_dir }}/pan_show_system_info_blob.txt"
+
+    # If command fails completely, fail hard. If parsing fails, WARN only.
+    - name: Fail only if command itself did not run (hard-fail)
+      ansible.builtin.assert:
+        that:
+          - pan_sys is defined
+        fail_msg: "Palo Alto API command did not execute."
+        success_msg: "All assertions passed"
+
+    - name: Optional debug (keys only)
+      ansible.builtin.debug:
+        var: pan_sys.keys()
+      when: pan_debug | bool

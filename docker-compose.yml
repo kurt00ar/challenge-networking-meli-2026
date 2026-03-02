@@ -1,0 +1,49 @@
+services:
+  challenge-networking:
+    image: challenge-networking-meli-2026:1.0.0
+    build:
+      context: ./part1
+      dockerfile: Dockerfile
+    container_name: Challenge-Networking-Meli-2026
+    ports:
+      - "5500:5000"
+    volumes:
+      - ./part1:/app/part1
+      - ./part2:/app/part2
+    working_dir: /app/part1
+
+    # si existe suma; si no existe, docker compose avisa pero no rompe si lo corrés sin --env-file
+    env_file:
+      - ./.env
+
+    environment:
+      - FLASK_ENV=production
+      - PYTHONUNBUFFERED=1
+
+      # FortiGate
+      - FGT_HOST=${FGT_HOST}
+      - FGT_USER=${FGT_USER}
+      - FGT_PASS=${FGT_PASS}
+      - FGT_HTTP_PORT=${FGT_HTTP_PORT}
+      - FGT_USE_SSL=${FGT_USE_SSL}
+
+      # Palo Alto (API key es la forma más estable)
+      - PAN_HOST=${PAN_HOST}
+      - PAN_API_KEY=${PAN_API_KEY}
+      - PAN_HTTPS_PORT=${PAN_HTTPS_PORT}
+
+      # Opcionales (si querés seguir usándolos para otros módulos)
+      - PAN_USER=${PAN_USER}
+      - PAN_PASS=${PAN_PASS}
+      - PAN_WAN_IF=${PAN_WAN_IF}
+      - PAN_VR=${PAN_VR}
+      - PAN_VSYS=${PAN_VSYS}
+
+      # VPN
+      - VPN_PSK=${VPN_PSK}
+
+    labels:
+      project: "Challenge Networking MELI 2026"
+      owner: "Ing. Ricardo Nuñez"
+      environment: "lab"
+      stack: "Flask + Nornir + Ansible"

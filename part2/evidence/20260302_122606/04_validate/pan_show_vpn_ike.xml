@@ -1,0 +1,11 @@
+<response status="success"><result>
+  <entry>
+    <name>VPN_MELI_CHALLENGE-IKEGW</name>
+    <created>Mar.02 09:26:01</created>
+    <expires>Mar.02 17:26:01</expires>
+    <gwid>1</gwid>
+    <role>Resp</role>
+    <mode>IKEv2</mode>
+    <algo>PSK/ DH2/ DES/SHA256</algo>
+  </entry>
+</result></response>

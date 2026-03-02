@@ -1,0 +1,391 @@
+---
+# =============================================================================
+#  PART2 – 02) PALO ALTO IPSEC VPN BUILD (PAN-OS 10.1 SAFE - NO OVERWRITE)
+#
+#  - tunnel.10 + IP
+#  - import vsys1
+#  - VR: append <member>tunnel.10</member> (NO overwrite) + verify + fallback merge
+#  - Zone VPN: create if missing + append member (NO overwrite)
+#  - IKE crypto + IPsec crypto
+#  - IKEGW IKEv2 real (NO retry, NO comment)
+#  - IPsec tunnel + Proxy-ID
+#  - Assert tunnel.10 is in VR before commit (FIX: member attributes)
+#  - Commit
+# =============================================================================
+
+- name: "Part2 | Paso 2 - Palo Alto | IPsec IKEv2 VPN Build (PAN-OS 10.1 SAFE - NO OVERWRITE)"
+  hosts: panos
+  gather_facts: false
+  connection: local
+  collections:
+    - paloaltonetworks.panos
+
+  vars:
+    # ENV
+    pan_host: "{{ (lookup('env','PAN_HOST') | default('', true)) | trim }}"
+    pan_api_key: "{{ (lookup('env','PAN_API_KEY') | default('', true)) | trim }}"
+    pan_https_port: "{{ (lookup('env','PAN_HTTPS_PORT') | default('443', true)) | trim }}"
+    pan_api_base: "https://{{ pan_host }}:{{ pan_https_port }}/api/"
+
+    # Defaults (si autodetect fallara)
+    pan_device_entry_default: "localhost.localdomain"
+    pan_vsys: "vsys1"
+    pan_vr_default: "default"
+    pan_zone_vpn: "VPN"
+
+    # WAN + Peer
+    pan_wan_if: "{{ hostvars[inventory_hostname].pan_wan_interface | default('ethernet1/3') }}"
+    peer_public_ip: "201.254.16.2"
+    psk: "Meli2026!"
+
+    # Tunnel IF
+    tunnel_if_unit: "tunnel.10"
+    tunnel_ip_cidr: "169.255.1.2/30"
+
+    # Names
+    ike_crypto_profile_name: "VPN_MELI_CHALLENGE-IKE-CRYPTO"
+    ipsec_crypto_profile_name: "VPN_MELI_CHALLENGE-IPSEC-CRYPTO"
+    ike_gateway_name: "VPN_MELI_CHALLENGE-IKEGW"
+    ipsec_tunnel_name: "VPN_MELI_CHALLENGE-IPSEC"
+
+    # Proxy-ID
+    proxy_pairs:
+      - name: "px01"
+        local: "10.20.10.0/24"
+        remote: "10.10.10.0/24"
+
+  tasks:
+    # -------------------------------------------------------------------------
+    # Guardrails
+    # -------------------------------------------------------------------------
+    - name: "ASSERT | PAN_HOST y PAN_API_KEY definidos"
+      ansible.builtin.assert:
+        that:
+          - pan_host | length > 0
+          - pan_api_key | length > 20
+        fail_msg: "Faltan PAN_HOST o PAN_API_KEY en el entorno."
+
+    - name: "SET FACT | Provider (api_key)"
+      ansible.builtin.set_fact:
+        pan_provider:
+          ip_address: "{{ ansible_host }}"
+          api_key: "{{ pan_api_key }}"
+
+    # -------------------------------------------------------------------------
+    # AUTO-DETECT device-entry (SAFE)
+    # -------------------------------------------------------------------------
+    - name: "PAN API | Detect device entry (config/devices)"
+      ansible.builtin.uri:
+        url: "{{ pan_api_base }}?type=config&action=get&xpath={{ '/config/devices' | urlencode }}&key={{ pan_api_key | urlencode }}"
+        method: GET
+        validate_certs: false
+        return_content: true
+      register: devices_raw
+
+    - name: "PAN | Extract device entry candidates"
+      ansible.builtin.set_fact:
+        pan_device_entry_candidates: "{{ (devices_raw.content | default('')) | regex_findall('entry name=\"([^\"]+)\"') }}"
+
+    - name: "PAN | Set pan_device_entry (first entry or default)"
+      ansible.builtin.set_fact:
+        pan_device_entry: "{{ (pan_device_entry_candidates[0]) if (pan_device_entry_candidates | length > 0) else pan_device_entry_default }}"
+
+    - name: "PAN | Debug device entry detection"
+      ansible.builtin.debug:
+        msg:
+          - "Candidates: {{ pan_device_entry_candidates | default([]) }}"
+          - "Selected: {{ pan_device_entry }}"
+
+    # -------------------------------------------------------------------------
+    # AUTO-DETECT virtual-router (SAFE)
+    # -------------------------------------------------------------------------
+    - name: "PAN API | Detect virtual router"
+      ansible.builtin.uri:
+        url: "{{ pan_api_base }}?type=config&action=get&xpath={{ (\"/config/devices/entry[@name='\" ~ pan_device_entry ~ \"']/network/virtual-router\") | urlencode }}&key={{ pan_api_key | urlencode }}"
+        method: GET
+        validate_certs: false
+        return_content: true
+      register: vr_raw
+
+    - name: "PAN | Extract VR candidates"
+      ansible.builtin.set_fact:
+        pan_vr_candidates: "{{ (vr_raw.content | default('')) | regex_findall('entry name=\"([^\"]+)\"') }}"
+
+    - name: "PAN | Set pan_vr (first or default)"
+      ansible.builtin.set_fact:
+        pan_vr: "{{ (pan_vr_candidates[0]) if (pan_vr_candidates | length > 0) else pan_vr_default }}"
+
+    - name: "PAN | Banner"
+      ansible.builtin.debug:
+        msg:
+          - "DEVICE_ENTRY={{ pan_device_entry }}"
+          - "VSYS={{ pan_vsys }}"
+          - "VR={{ pan_vr }}"
+          - "WAN_IF={{ pan_wan_if }}"
+          - "TUN_IF={{ tunnel_if_unit }} IP={{ tunnel_ip_cidr }}"
+          - "PEER_PUBLIC_IP={{ peer_public_ip }}"
+          - "ZONE_VPN={{ pan_zone_vpn }}"
+
+    # -------------------------------------------------------------------------
+    # 1) Tunnel Interface + IP
+    # -------------------------------------------------------------------------
+    - name: "CONFIG | Tunnel Interface unit + IP (tunnel.10)"
+      paloaltonetworks.panos.panos_config_element:
+        provider: "{{ pan_provider }}"
+        xpath: "/config/devices/entry[@name='{{ pan_device_entry }}']/network/interface/tunnel/units"
+        element: |
+          <entry name="{{ tunnel_if_unit }}">
+            <ip>
+              <entry name="{{ tunnel_ip_cidr }}"/>
+            </ip>
+          </entry>
+
+    # -------------------------------------------------------------------------
+    # 2) Import tunnel to VSYS
+    # -------------------------------------------------------------------------
+    - name: "CONFIG | Import tunnel IF into VSYS"
+      paloaltonetworks.panos.panos_config_element:
+        provider: "{{ pan_provider }}"
+        xpath: "/config/devices/entry[@name='{{ pan_device_entry }}']/vsys/entry[@name='{{ pan_vsys }}']/import/network/interface"
+        element: "<member>{{ tunnel_if_unit }}</member>"
+
+    # =========================================================================
+    # 3) ENSURE tunnel.10 in VR
+    #    TRY1: set append member
+    #    TRY2: edit full list merged (fallback)
+    #    VERIFY FINAL (FIX: member attributes)
+    # =========================================================================
+
+    - name: "PAN API | GET VR interface members (raw)"
+      ansible.builtin.uri:
+        url: "{{ pan_api_base }}?type=config&action=get&key={{ pan_api_key | urlencode }}&xpath={{ (\"/config/devices/entry[@name='\" ~ pan_device_entry ~ \"']/network/virtual-router/entry[@name='\" ~ pan_vr ~ \"']/interface\") | urlencode }}"
+        method: GET
+        validate_certs: false
+        return_content: true
+      register: vr_if_raw
+
+    - name: "PAN | Parse VR members (supports member attributes)"
+      ansible.builtin.set_fact:
+        vr_members: >-
+          {{
+            (vr_if_raw.content | default(''))
+            | regex_findall('<member[^>]*>([^<]+)</member>')
+            | map('trim')
+            | reject('equalto','')
+            | list
+          }}
+
+    - name: "PAN API | VR add member tunnel.10 (TRY1 append)"
+      ansible.builtin.uri:
+        url: "{{ pan_api_base }}?type=config&action=set&key={{ pan_api_key | urlencode }}&xpath={{ (\"/config/devices/entry[@name='\" ~ pan_device_entry ~ \"']/network/virtual-router/entry[@name='\" ~ pan_vr ~ \"']/interface\") | urlencode }}&element={{ ('<member>' ~ tunnel_if_unit ~ '</member>') | urlencode }}"
+        method: GET
+        validate_certs: false
+        return_content: true
+      when: tunnel_if_unit not in vr_members
+      register: vr_add_member_try1
+      failed_when: >
+        (vr_add_member_try1.status | default(200)) != 200 or
+        ((vr_add_member_try1.content | default('')) is search('<status>error</status>'))
+
+    - name: "PAN API | Re-GET VR interface members (verify after TRY1)"
+      ansible.builtin.uri:
+        url: "{{ pan_api_base }}?type=config&action=get&key={{ pan_api_key | urlencode }}&xpath={{ (\"/config/devices/entry[@name='\" ~ pan_device_entry ~ \"']/network/virtual-router/entry[@name='\" ~ pan_vr ~ \"']/interface\") | urlencode }}"
+        method: GET
+        validate_certs: false
+        return_content: true
+      register: vr_if_verify_1
+
+    - name: "PAN | Parse VR members after TRY1 (supports member attributes)"
+      ansible.builtin.set_fact:
+        vr_members_after_try1: >-
+          {{
+            (vr_if_verify_1.content | default(''))
+            | regex_findall('<member[^>]*>([^<]+)</member>')
+            | map('trim')
+            | reject('equalto','')
+            | list
+          }}
+
+    - name: "PAN | Build merged VR members for TRY2 (unique)"
+      ansible.builtin.set_fact:
+        vr_members_merged: >-
+          {{
+            (vr_members_after_try1 | default(vr_members) | default([]) + [tunnel_if_unit])
+            | map('trim')
+            | reject('equalto','')
+            | unique
+            | list
+          }}
+
+    - name: "PAN API | VR edit interface list (TRY2 fallback MERGE-SAFE)"
+      ansible.builtin.uri:
+        url: "{{ pan_api_base }}?type=config&action=edit&key={{ pan_api_key | urlencode }}&xpath={{ (\"/config/devices/entry[@name='\" ~ pan_device_entry ~ \"']/network/virtual-router/entry[@name='\" ~ pan_vr ~ \"']/interface\") | urlencode }}&element={{ ('<interface>' ~ (vr_members_merged | map('regex_replace','^(.*)$','<member>\\1</member>') | join('')) ~ '</interface>') | urlencode }}"
+        method: GET
+        validate_certs: false
+        return_content: true
+      when: tunnel_if_unit not in (vr_members_after_try1 | default([]))
+      register: vr_edit_try2
+      failed_when: >
+        (vr_edit_try2.status | default(200)) != 200 or
+        ((vr_edit_try2.content | default('')) is search('<status>error</status>'))
+
+    - name: "PAN API | Re-GET VR interface members (verify final)"
+      ansible.builtin.uri:
+        url: "{{ pan_api_base }}?type=config&action=get&key={{ pan_api_key | urlencode }}&xpath={{ (\"/config/devices/entry[@name='\" ~ pan_device_entry ~ \"']/network/virtual-router/entry[@name='\" ~ pan_vr ~ \"']/interface\") | urlencode }}"
+        method: GET
+        validate_certs: false
+        return_content: true
+      register: vr_if_verify_final
+
+    # ✅✅✅ AQUI VA EL PATCH QUE ME PREGUNTASTE “DONDE CHUCHA”
+    - name: "PAN | Parse VR members (FINAL, supports member attributes)"
+      ansible.builtin.set_fact:
+        vr_members_final: >-
+          {{
+            (vr_if_verify_final.content | default(''))
+            | regex_findall('<member[^>]*>([^<]+)</member>')
+            | map('trim')
+            | reject('equalto','')
+            | list
+          }}
+
+    - name: "PAN | Assert tunnel.10 is in VR BEFORE commit (FINAL)"
+      ansible.builtin.assert:
+        that:
+          - tunnel_if_unit in vr_members_final
+        fail_msg: |
+          tunnel.10 NO quedó asociado al Virtual Router {{ pan_vr }} (según parse FINAL).
+          vr_members_final={{ vr_members_final | default([]) }}
+          Dump VR content (recortado):
+          {{ (vr_if_verify_final.content | default(''))[:900] }}
+
+    # -------------------------------------------------------------------------
+    # 4) Zone VPN: create if missing + append member
+    # -------------------------------------------------------------------------
+    - name: "PAN API | GET Zone VPN (exists?)"
+      ansible.builtin.uri:
+        url: "{{ pan_api_base }}?type=config&action=get&key={{ pan_api_key | urlencode }}&xpath={{ (\"/config/devices/entry[@name='\" ~ pan_device_entry ~ \"']/vsys/entry[@name='\" ~ pan_vsys ~ \"']/zone/entry[@name='\" ~ pan_zone_vpn ~ \"']\") | urlencode }}"
+        method: GET
+        validate_certs: false
+        return_content: true
+      register: zone_get
+      failed_when: false
+
+    - name: "CONFIG | Create Zone VPN (only if missing)"
+      paloaltonetworks.panos.panos_zone:
+        provider: "{{ pan_provider }}"
+        zone: "{{ pan_zone_vpn }}"
+        mode: "layer3"
+        interface:
+          - "{{ tunnel_if_unit }}"
+        vsys: "{{ pan_vsys }}"
+        state: present
+      when: zone_get.status is not defined or zone_get.status != 200
+
+    - name: "PAN API | ZONE VPN add layer3 member tunnel.10 (append)"
+      ansible.builtin.uri:
+        url: "{{ pan_api_base }}?type=config&action=set&key={{ pan_api_key | urlencode }}&xpath={{ (\"/config/devices/entry[@name='\" ~ pan_device_entry ~ \"']/vsys/entry[@name='\" ~ pan_vsys ~ \"']/zone/entry[@name='\" ~ pan_zone_vpn ~ \"']/network/layer3\") | urlencode }}&element={{ ('<member>' ~ tunnel_if_unit ~ '</member>') | urlencode }}"
+        method: GET
+        validate_certs: false
+        return_content: true
+      register: zone_add_member
+
+    # -------------------------------------------------------------------------
+    # 5) IKE Crypto Profile
+    # -------------------------------------------------------------------------
+    - name: "CONFIG | IKE Crypto Profile (DES + SHA256 + group2)"
+      paloaltonetworks.panos.panos_ike_crypto_profile:
+        provider: "{{ pan_provider }}"
+        name: "{{ ike_crypto_profile_name }}"
+        encryption: ["des"]
+        authentication: ["sha256"]
+        dh_group: ["group2"]
+        lifetime_seconds: 28800
+        state: present
+
+    # -------------------------------------------------------------------------
+    # 6) IPsec Crypto Profile
+    # -------------------------------------------------------------------------
+    - name: "CONFIG | IPsec Crypto Profile (ESP DES + SHA256 + group2)"
+      paloaltonetworks.panos.panos_config_element:
+        provider: "{{ pan_provider }}"
+        xpath: "/config/devices/entry[@name='{{ pan_device_entry }}']/network/ike/crypto-profiles/ipsec-crypto-profiles"
+        element: |
+          <entry name="{{ ipsec_crypto_profile_name }}">
+            <esp>
+              <encryption><member>des</member></encryption>
+              <authentication><member>sha256</member></authentication>
+            </esp>
+            <dh-group>group2</dh-group>
+            <lifetime><hours>1</hours></lifetime>
+          </entry>
+
+    # -------------------------------------------------------------------------
+    # 7) IKE Gateway (IKEv2 real, DPD enable+interval only, NO retry, NO comment)
+    # -------------------------------------------------------------------------
+    - name: "SET FACT | IKEGW XML"
+      ansible.builtin.set_fact:
+        pan_xpath_ikegw: "/config/devices/entry[@name='{{ pan_device_entry }}']/network/ike/gateway"
+        pan_ikegw_xml: >-
+          <entry name="{{ ike_gateway_name }}">
+            <authentication><pre-shared-key><key>{{ psk }}</key></pre-shared-key></authentication>
+            <protocol>
+              <version>ikev2</version>
+              <ikev2>
+                <ike-crypto-profile>{{ ike_crypto_profile_name }}</ike-crypto-profile>
+                <dpd><enable>yes</enable><interval>5</interval></dpd>
+              </ikev2>
+            </protocol>
+            <protocol-common>
+              <passive-mode>yes</passive-mode>
+              <nat-traversal><enable>no</enable></nat-traversal>
+              <fragmentation><enable>no</enable></fragmentation>
+            </protocol-common>
+            <local-address><interface>{{ pan_wan_if }}</interface></local-address>
+            <peer-address><ip>{{ peer_public_ip }}</ip></peer-address>
+          </entry>
+
+    - name: "PAN API | IKEGW set (IKEv2 + DPD interval only)"
+      ansible.builtin.uri:
+        url: "{{ pan_api_base }}?type=config&action=set&key={{ pan_api_key | urlencode }}&xpath={{ pan_xpath_ikegw | urlencode }}&element={{ pan_ikegw_xml | urlencode }}"
+        method: GET
+        validate_certs: false
+        return_content: true
+      register: ikegw_set
+
+    # -------------------------------------------------------------------------
+    # 8) IPsec Tunnel + Proxy-IDs
+    # -------------------------------------------------------------------------
+    - name: "CONFIG | IPsec Tunnel (Auto-Key + Proxy-ID)"
+      paloaltonetworks.panos.panos_config_element:
+        provider: "{{ pan_provider }}"
+        xpath: "/config/devices/entry[@name='{{ pan_device_entry }}']/network/tunnel/ipsec"
+        element: |
+          <entry name="{{ ipsec_tunnel_name }}">
+            <tunnel-interface>{{ tunnel_if_unit }}</tunnel-interface>
+            <ipv6>no</ipv6>
+            <auto-key>
+              <ike-gateway>
+                <entry name="{{ ike_gateway_name }}"/>
+              </ike-gateway>
+              <ipsec-crypto-profile>{{ ipsec_crypto_profile_name }}</ipsec-crypto-profile>
+              <proxy-id>
+              {% for px in proxy_pairs %}
+                <entry name="{{ px.name }}">
+                  <local>{{ px.local }}</local>
+                  <remote>{{ px.remote }}</remote>
+                  <protocol><any/></protocol>
+                </entry>
+              {% endfor %}
+              </proxy-id>
+            </auto-key>
+            <anti-replay>yes</anti-replay>
+            <disabled>no</disabled>
+          </entry>
+
+    # -------------------------------------------------------------------------
+    # 9) Commit
+    # -------------------------------------------------------------------------
+    - name: "COMMIT | Apply Candidate Configuration"
+      paloaltonetworks.panos.panos_commit_firewall:
+        provider: "{{ pan_provider }}"
