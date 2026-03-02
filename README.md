@@ -230,10 +230,9 @@ Se utilizó un único contenedor que incluye:
 Esto garantiza reproducibilidad del entorno.
 
 ---
-```md
+
 ## 📂 Estructura del Repositorio
 
-```text
 .
 ├── docker-compose.yml
 ├── Makefile
