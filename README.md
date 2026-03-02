@@ -1,3 +1,4 @@
+
 ![Docker](https://img.shields.io/badge/docker-compose-blue)
 ![Python](https://img.shields.io/badge/python-3.10-blue)
 ![Automation](https://img.shields.io/badge/network-automation-success)
@@ -150,3 +151,104 @@ Si este entorno creciera a múltiples dispositivos por sede:
 ├── part2/                 # Ansible (FortiGate ↔ Palo Alto)
 ├── docs/                  # Documentación e imágenes
 └── scripts/               # Scripts auxiliares
+
+
+⸻
+
+🚀 Inicio Rápido (Modo Evaluador)
+
+1) Clonar el repositorio
+
+git clone https://github.com/kurt00ar/challenge-networking-meli-2026.git
+cd challenge-networking-meli-2026
+
+2) Configurar variables de entorno
+
+cp .env.example .env
+
+Completar en .env:
+      •     PAN_HOST, PAN_API_KEY, PAN_WAN_IF, PAN_VSYS, PAN_VR
+      •     FGT_HOST, FGT_USER, FGT_PASS
+      •     VPN_PSK
+
+3) Construir y levantar el entorno
+
+docker compose up -d --build
+docker compose ps
+
+4) Ejecutar automatización completa
+
+make part2-run-all
+
+
+⸻
+
+🔵 Parte 1 — Automatización L2 (VLANs + Hostname)
+
+La Parte 1 automatiza switches Cisco usando Nornir + Netmiko y expone una UI en Flask para definir hostnames y VLANs.
+
+Funcionalidades:
+      •     Creación automática de VLANs
+      •     Cambio de hostname
+      •     Guardado en NVRAM
+      •     Backup pre/post
+      •     Validación automática
+      •     Evidencia JSON por ejecución
+
+### Interfaz Web (Configuración VLANs y Hostnames)
+![Part1 VLANs](docs/img/Part1-VLANs.jpg)
+
+### Resultados y Evidencia Generada
+![Part1 Results](docs/img/Part1-Results.jpg)
+
+Outputs:
+      •     Evidencia: part1/evidence/flask/
+      •     Backups: part1/backups/
+
+⸻
+
+🟢 Parte 2 — VPN IPsec (FortiGate ↔ Palo Alto)
+
+Flujo de playbooks:
+      1.    00_pre_backup.yml
+      2.    01_fortigate_ipsec.yml
+      3.    02_paloalto_ipsec.yml
+      4.    03_paloalto_network.yml
+      5.    04_validate.yml
+      6.    06_post_backup.yml
+
+Outputs:
+      •     Evidencia: part2/evidence/<timestamp>/
+      •     Backups FortiGate: part2/backups/fortigate/<timestamp>/
+      •     Backups Palo Alto: part2/backups/paloalto/<timestamp>/
+
+Validaciones implementadas:
+      •     Túnel asociado a Virtual Router
+      •     Membresía en zona VPN
+      •     Políticas de firewall
+      •     Rutas estáticas
+      •     Conectividad validada vía playbooks
+
+⸻
+
+♻️ Reset completo del entorno
+
+docker compose down -v --remove-orphans
+docker image rm challenge-networking-meli-2026:1.0.0 2>/dev/null || true
+docker builder prune -f
+docker compose up -d --build
+
+
+⸻
+
+🎥 Evidencia adicional (video)
+
+Se recomienda un video corto (7–10 min) mostrando:
+      1.    Arquitectura (GNS3 + Docker)
+      2.    Ejecución Parte 1 (UI + evidencia)
+      3.    Ejecución Parte 2 (Ansible + backups + validaciones)
+      4.    Evidencia por timestamp + historial de commits
+
+Si se requiere acceso al laboratorio para validación técnica, puedo generar accesos VPN temporales bajo solicitud.
+
+⸻
