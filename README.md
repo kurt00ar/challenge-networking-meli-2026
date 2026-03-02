@@ -233,6 +233,8 @@ Esto garantiza reproducibilidad del entorno.
 
 ## 📂 Estructura del Repositorio
 
+```text
+...
 .
 ├── docker-compose.yml
 ├── Makefile
