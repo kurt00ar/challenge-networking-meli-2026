@@ -1,18 +1,3 @@
-Sí 🙌
-
-👉 Todo eso va dentro de README.md, PERO hay un detalle importante:
-
-En tu mensaje hay separadores tipo ⸻ y algunos bloques de código quedaron abiertos.
-GitHub Markdown es sensible a eso.
-
-Te lo voy a devolver 100% limpio y listo para pegar sin que se rompa el formato.
-
-⸻
-
-📄 README.md — VERSIÓN FINAL LIMPIA (COPIAR Y PEGAR)
-
-Pegá exactamente esto en README.md:
-
 # MELI Technical Challenge — Parte 1 y Parte 2 (Automatización de Redes)
 
 Este repositorio contiene mi solución al Challenge Técnico de Networking para MELI, dividido en:
