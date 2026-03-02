@@ -152,7 +152,7 @@ Si este entorno creciera a múltiples dispositivos por sede:
 ├── docs/                  # Documentación e imágenes
 └── scripts/               # Scripts auxiliares
 
-
+```
 ⸻
 
 🚀 Inicio Rápido (Modo Evaluador)
