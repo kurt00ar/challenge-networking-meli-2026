@@ -264,7 +264,7 @@ Outputs generados
 
 ---
 
-#🟢 Parte 2 — VPN IPsec
+# 🟢 Parte 2 — VPN IPsec
 
 Flujo de playbooks
 	1.	00_pre_backup.yml
