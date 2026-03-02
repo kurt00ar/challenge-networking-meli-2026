@@ -1,14 +1,4 @@
-Con eso, GitHub vuelve a interpretar Markdown normal y aparecen las imágenes.
 
----
-
-# ✅ README.md arreglado (te lo dejo completo, listo para reemplazar)
-
-Copiá y pegá **todo esto** como tu `README.md` (ya viene con el bloque cerrado, y con las imágenes bien ubicadas y títulos prolijos).
-
-> Nota: dejé tus separadores “⸻” pero ya NO rompen nada. Igual, si querés ultra pro GitHub, después los cambiamos por `---`.
-
-```markdown
 # MELI Technical Challenge — Parte 1 y Parte 2 (Automatización de Redes)
 
 Este repositorio contiene mi solución al **Laboratorio de Candidatos – Networking Mercado Libre 2026**.
@@ -26,7 +16,7 @@ El challenge está dividido en dos partes:
 ### 🔹 Parte 1 – Automatización de Switch Cisco (L2)
 
 - Desarrollo de automatización en **Python**
-- Interfaz web para configuración de **VLANs** y **hostnames**
+- Interfaz frontend para configuración de **VLANs** y **hostnames**
 - Configuración automática de:
   - VLAN 10 – VLAN_DATOS
   - VLAN 20 – VLAN_VOZ
@@ -240,7 +230,7 @@ Se utilizó un único contenedor que incluye:
 Esto garantiza reproducibilidad del entorno.
 
 ---
-
+```md
 ## 📂 Estructura del Repositorio
 
 ```text
@@ -253,3 +243,121 @@ Esto garantiza reproducibilidad del entorno.
 ├── part2/
 ├── docs/
 └── scripts/
+
+
+⸻
+
+🚀 Inicio Rápido (Modo Evaluador)
+
+1️⃣ Clonar el repositorio
+
+git clone https://github.com/kurt00ar/challenge-networking-meli-2026.git
+cd challenge-networking-meli-2026
+
+2️⃣ Configurar variables de entorno
+
+cp .env.example .env
+
+Completar en .env:
+	•	PAN_HOST
+	•	PAN_API_KEY
+	•	PAN_WAN_IF
+	•	PAN_VSYS
+	•	PAN_VR
+	•	FGT_HOST
+	•	FGT_USER
+	•	FGT_PASS
+	•	VPN_PSK
+
+3️⃣ Construir y levantar el entorno
+
+docker compose up -d --build
+docker compose ps
+
+4️⃣ Ejecutar automatización completa
+
+make part2-run-all
+
+
+⸻
+
+🔵 Parte 1 — Automatización L2 (VLANs + Hostname)
+
+La Parte 1 implementa automatización sobre switches Cisco utilizando Nornir + Netmiko, con una interfaz web desarrollada en Flask.
+
+El objetivo fue simular un escenario real de provisión inicial de switches en sedes remotas, incluyendo configuración, validación y generación de evidencia automática.
+
+Funcionalidades implementadas
+	•	Creación automática de VLANs
+	•	Cambio de hostname
+	•	Guardado en NVRAM
+	•	Backup pre y post cambio
+	•	Validación automática de configuración
+	•	Generación de evidencia JSON por ejecución (timestamp)
+
+📸 Interfaz Web (Configuración VLANs y Hostnames)
+![Part1 VLANs](docs/img/Part1-VLANs.jpg)
+
+📸 Resultados y Evidencia Generada
+![Part1 Results](docs/img/Part1-Results.jpg)
+
+Evidencia y backups generados:
+	•	UI evidence: part1/evidence/flask/
+	•	Backups: part1/backups/
+
+⸻
+
+🟢 Parte 2 — VPN IPsec (FortiGate ↔ Palo Alto)
+
+Flujo de ejecución:
+	1.	00_pre_backup.yml
+	2.	01_fortigate_ipsec.yml
+	3.	02_paloalto_ipsec.yml
+	4.	03_paloalto_network.yml
+	5.	04_validate.yml
+	6.	06_post_backup.yml
+
+Evidencia y backups generados:
+	•	Evidencia: part2/evidence/<timestamp>/
+	•	Backups FortiGate: part2/backups/fortigate/<timestamp>/
+	•	Backups Palo Alto: part2/backups/paloalto/<timestamp>/
+
+🔎 Validaciones implementadas
+	•	Asociación del túnel al Virtual Router
+	•	Membresía en zona VPN
+	•	Políticas de firewall
+	•	Rutas estáticas
+	•	Conectividad validada vía playbooks
+
+⸻
+
+♻️ Reset completo del entorno
+
+docker compose down -v --remove-orphans
+docker image rm challenge-networking-meli-2026:1.0.0 2>/dev/null || true
+docker builder prune -f
+docker compose up -d --build
+
+
+⸻
+
+🎥 Evidencia adicional (video)
+
+Se recomienda acompañar este repositorio con un video corto (7–10 minutos) mostrando:
+	1.	Arquitectura (GNS3 + Docker)
+	2.	Ejecución Parte 1 (UI + evidencia)
+	3.	Ejecución Parte 2 (Ansible + backups + validaciones)
+	4.	Estructura de evidencia por timestamp y commits en Git
+
+Si se requiere acceso al laboratorio para validación técnica, puedo generar accesos VPN temporales bajo solicitud.
+
+⸻
+
+🧩 Consideraciones Finales
+	•	Proyecto orientado a laboratorio
+	•	Arquitectura reproducible
+	•	Evidencia organizada
+	•	Automatización multi-vendor
+	•	Control de versiones aplicado
+
+---
