@@ -361,19 +361,3 @@ Si se requiere acceso al laboratorio para validación técnica, puedo generar ac
 	•	Control de versiones aplicado
 
 ---
-
-## ✅ Qué cambió (lo que te faltaba)
-- **Se insertaron las imágenes reales**:
-  - `docs/img/Part1-VLANs.jpg`
-  - `docs/img/Part1-Results.jpg`
-- Se sacaron los placeholders “📸 UI… / 📸 Resultados…” que no mostraban nada.
-- Se ordenó Parte 1 y Parte 2 para que quede coherente.
-
----
-
-Si querés que además se vea “más pro” todavía, lo siguiente (sin color) es lo que más suma visual en GitHub:
-- una **tabla** de direccionamiento (Argentina/Brasil)
-- una sección “**Tech Stack**” en bullets cortos
-- badges (build / docker / python) arriba
-
-Decime si querés que te agregue la **tabla de direccionamiento** (queda tremenda).
