@@ -296,8 +296,10 @@ Funcionalidades implementadas
 	•	Generación de evidencia JSON por ejecución (timestamp)
 
 📸 Interfaz Web (Configuración VLANs y Hostnames)
+![Part1 VLANs](docs/img/Part1-VLANs.jpg)
 
 📸 Resultados y Evidencia Generada
+![Part1 Results](docs/img/Part1-Results.jpg)
 
 Evidencia y backups generados:
 	•	UI evidence: part1/evidence/flask/
