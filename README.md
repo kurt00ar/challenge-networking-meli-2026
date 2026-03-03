@@ -281,7 +281,7 @@ docker compose up -d --build
 
 # 🎥 Evidencia adicional
 
-https://youtu.be/3aqSMiEkk2w
+https://youtu.be/3aqSMiEkk2w 
 Video mostrando:
 	1.	Arquitectura (GNS3 + Docker)
 	2.	Ejecución Parte 1
