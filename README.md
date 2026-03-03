@@ -201,32 +201,32 @@ Beneficios:
 
 1️⃣ Clonar el repositorio
 
-git clone https://github.com/kurt00ar/challenge-networking-meli-2026.git
-cd challenge-networking-meli-2026
+- git clone https://github.com/kurt00ar/challenge-networking-meli-2026.git
+- cd challenge-networking-meli-2026
 
 2️⃣ Configurar variables de entorno
 
-cp .env.example .env
+- cp .env.example .env
 
-Editar .env y completar:
-	•	PAN_HOST
-	•	PAN_API_KEY
-	•	PAN_WAN_IF
-	•	PAN_VSYS
-	•	PAN_VR
-	•	FGT_HOST
-	•	FGT_USER
-	•	FGT_PASS
-	•	VPN_PSK
+- Editar .env y completar:
+- 	•	PAN_HOST
+- 	•	PAN_API_KEY
+- 	•	PAN_WAN_IF
+- 	•	PAN_VSYS
+- 	•	PAN_VR
+- 	•	FGT_HOST
+- 	•	FGT_USER
+- 	•	FGT_PASS
+- 	•	VPN_PSK
 
 3️⃣ Levantar el entorno
 
-docker compose up -d --build
-docker compose ps
+- docker compose up -d --build
+- docker compose ps
 
 4️⃣ Ejecutar automatización completa
 
-make part2-run-all
+- make part2-run-all
 
 ---
 
@@ -248,7 +248,7 @@ Outputs generados
 
 # 🟢 Parte 2 — VPN IPsec
 
-Flujo de playbooks
+- Flujo de playbooks
 	1.	00_pre_backup.yml
 	2.	01_fortigate_ipsec.yml
 	3.	02_paloalto_ipsec.yml
@@ -256,12 +256,12 @@ Flujo de playbooks
 	5.	04_validate.yml
 	6.	06_post_backup.yml
 
-Outputs generados
+- Outputs generados
 	•	Evidencia: part2/evidence/<timestamp>/
 	•	Backups FortiGate: part2/backups/fortigate/<timestamp>/
 	•	Backups Palo Alto: part2/backups/paloalto/<timestamp>/
 
-Validaciones implementadas
+- Validaciones implementadas
 	•	Asociación del túnel al Virtual Router
 	•	Membresía en zona VPN
 	•	Políticas de firewall
@@ -272,17 +272,17 @@ Validaciones implementadas
 
 # ♻️ Reset completo del entorno
 
-docker compose down -v --remove-orphans
-docker image rm challenge-networking-meli-2026:1.0.0 2>/dev/null || true
-docker builder prune -f
-docker compose up -d --build
+- docker compose down -v --remove-orphans
+- docker image rm challenge-networking-meli-2026:1.0.0 2>/dev/null || true
+- docker builder prune -f
+- docker compose up -d --build
 
 ---
 
 # 🎥 Evidencia adicional
 
-https://youtu.be/3aqSMiEkk2w 
-Video mostrando:
+- https://youtu.be/3aqSMiEkk2w 
+- Video mostrando:
 	1.	Arquitectura (GNS3 + Docker)
 	2.	Ejecución Parte 1
 	3.	Ejecución Parte 2
@@ -293,7 +293,7 @@ Video mostrando:
 
 # 📌 Notas Finales
 
-Este laboratorio fue diseñado para:
+- Este laboratorio fue diseñado para:
 	•	Demostrar automatización multi-vendor real
 	•	Aplicar infraestructura reproducible
 	•	Implementar validaciones post-cambio
@@ -307,5 +307,5 @@ Todo el código fue versionado utilizando Git siguiendo buenas prácticas de con
 ```md
 # 📌 Parte 2 — Plan de Automatización: `docs/parte2_plan_automatizacion_vpn_ipsec.md`
 # 📌 Parte 2 — Plan Enterprise Automatización: `docs/part2_Enterprise_Automation_Plan.md` 
-# 📌 Parte 2 — Plan Enterprise Automatización: `docs/part2_parametros_vpn_ipsec.md`
+# 📌 Parte 2 — Plan Parametros VPN IPSEC Automatización: `docs/part2_parametros_vpn_ipsec.md`
 ```
