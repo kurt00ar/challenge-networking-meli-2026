@@ -303,3 +303,7 @@ Este laboratorio fue diseñado para:
 Todo el código fue versionado utilizando Git siguiendo buenas prácticas de control de cambios.
 
 ---
+
+```md
+📌 Parte 2 — Plan de Automatización: `docs/parte2_plan_automatizacion_vpn_ipsec.md`
+```
