@@ -281,7 +281,8 @@ docker compose up -d --build
 
 # 🎥 Evidencia adicional
 
-Se recomienda un video corto (7–10 minutos) mostrando:
+https://youtu.be/3aqSMiEkk2w
+Video mostrando:
 	1.	Arquitectura (GNS3 + Docker)
 	2.	Ejecución Parte 1
 	3.	Ejecución Parte 2
