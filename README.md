@@ -305,7 +305,7 @@ Todo el código fue versionado utilizando Git siguiendo buenas prácticas de con
 ---
 
 ```md
-# 📌 Parte 2 — Plan de Automatización: `docs/parte2_plan_automatizacion_vpn_ipsec.md`
+# 📌 Parte 2 — Plan de Automatización: `docs/part2_plan_automatizacion_vpn_ipsec.md`
 # 📌 Parte 2 — Plan Enterprise Automatización: `docs/part2_Enterprise_Automation_Plan.md` 
 # 📌 Parte 2 — Plan Parametros VPN IPSEC Automatización: `docs/part2_parametros_vpn_ipsec.md`
 ```
