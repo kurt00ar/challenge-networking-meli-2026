@@ -1,0 +1,6 @@
+
+# Large media
+*.mp4
+
+# Large media
+/docs/img/*.mp4
