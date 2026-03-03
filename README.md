@@ -224,7 +224,16 @@ Beneficios:
 - docker compose up -d --build
 - docker compose ps
 
-4️⃣ Ejecutar automatización completa
+✅ **Acceso a la UI Parte 1 (Flask):**
+   → http://localhost:5500
+
+Detalles técnicos:
+- Puerto interno del contenedor: 5000
+- Puerto expuesto en el host: 5500
+
+Nota: Si se ejecuta en un servidor remoto, reemplazar `localhost` por la IP del host Docker.
+
+4️⃣ Ejecutar automatización completa (Parte 2 — VPN IPsec)
 
 - make part2-run-all
 
