@@ -4,3 +4,6 @@
 
 # Large media
 /docs/img/*.mp4
+
+# Large media
+*.mp4
